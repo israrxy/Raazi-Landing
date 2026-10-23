@@ -82,13 +82,14 @@
         .nav-links { display: flex; align-items: center; gap: 26px; font-size: 14px; font-weight: 600; color: var(--mut); }
         .nav-links a:hover { color: var(--g2); }
         .nav-dl {
-            width: 38px; height: 38px; flex: none; border-radius: 11px; display: flex; align-items: center; justify-content: center;
-            border: 1px solid var(--line); background: var(--panel); color: var(--mut);
+            display: inline-flex; align-items: center; gap: 7px; height: 36px; padding: 0 15px; flex: none;
+            border: 1px solid var(--line); border-radius: 10px; background: var(--panel); color: var(--txt);
+            font-size: 13px; font-weight: 700; font-family: 'Outfit';
             transition: border-color .25s, color .25s;
         }
         .nav-dl:hover { border-color: var(--line-2); color: var(--g2); }
 
-        /* ---------- download row: Uptodown main + APK side icon ---------- */
+        /* ---------- download row: Uptodown main + Install (APK) button ---------- */
         .dl-row { display: flex; align-items: center; gap: 12px; }
         .dl-badge {
             display: inline-flex; flex: none;
@@ -96,11 +97,13 @@
         .dl-badge:hover { opacity: .85; }
         .dl-badge img { width: 172px; height: 61px; }
         .dl-apk {
-            width: 61px; height: 61px; flex: none; border-radius: 14px; display: flex; align-items: center; justify-content: center;
-            border: 1px solid var(--line); background: var(--panel); color: var(--mut);
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            height: 61px; padding: 0 20px; flex: none;
+            border: 1px solid var(--line); border-radius: 14px; background: var(--panel); color: var(--txt);
+            font-size: 14.5px; font-weight: 700; font-family: 'Outfit';
             transition: border-color .25s, color .25s;
         }
-        .dl-apk:hover { border-color: var(--line-2); color: var(--g2); transform: translateY(-2px); }
+        .dl-apk:hover { border-color: var(--line-2); color: var(--g2); }
 
         .pill {
             display: inline-flex; align-items: center; gap: 7px; font-size: 12px; font-weight: 600;
@@ -345,8 +348,9 @@
                 Source
             </a>
             <!-- small side icon: direct APK -->
-            <a href="https://github.com/israrxy/Raazi/releases/download/v6.0.0/Raazi-v6.0.0.apk" class="nav-dl" title="Direct APK download (v6.0.0)" aria-label="Direct APK download">
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><polyline points="7 10 12 15 17 10"/><path d="M5 21h14"/></svg>
+            <a href="https://github.com/israrxy/Raazi/releases/download/v6.0.0/Raazi-v6.0.0.apk" class="nav-dl" title="Direct APK install (v6.0.0)">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><polyline points="7 10 12 15 17 10"/><path d="M5 21h14"/></svg>
+                Install
             </a>
         </div>
     </div>
@@ -385,8 +389,9 @@
                 <a href='https://raazi-music-player.en.uptodown.com/android' title='Download Raazi Music Player' class="dl-badge">
                     <img src='https://stc.utdstc.com/img/mediakit/download-gio-big.png' alt='Download Raazi Music Player'>
                 </a>
-                <a href="https://github.com/israrxy/Raazi/releases/download/v6.0.0/Raazi-v6.0.0.apk" class="dl-apk" title="Direct APK download (v6.0.0)" aria-label="Direct APK download">
-                    <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><polyline points="7 10 12 15 17 10"/><path d="M5 21h14"/></svg>
+                <a href="https://github.com/israrxy/Raazi/releases/download/v6.0.0/Raazi-v6.0.0.apk" class="dl-apk" title="Direct APK install (v6.0.0)" aria-label="Install the APK directly">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><polyline points="7 10 12 15 17 10"/><path d="M5 21h14"/></svg>
+                    Install
                 </a>
             </div>
             <p class="ph-note">v6.0.0 · 21 MB · Requires Android 7.0+ · <a href="https://github.com/israrxy/Raazi" target="_blank" rel="noopener">Source on GitHub</a></p>
@@ -410,8 +415,9 @@
                     <a href='https://raazi-music-player.en.uptodown.com/android' title='Download Raazi Music Player' class="dl-badge">
                         <img src='https://stc.utdstc.com/img/mediakit/download-gio-big.png' alt='Download Raazi Music Player'>
                     </a>
-                    <a href="https://github.com/israrxy/Raazi/releases/download/v6.0.0/Raazi-v6.0.0.apk" class="dl-apk" title="Direct APK download (v6.0.0)" aria-label="Direct APK download">
-                        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><polyline points="7 10 12 15 17 10"/><path d="M5 21h14"/></svg>
+                    <a href="https://github.com/israrxy/Raazi/releases/download/v6.0.0/Raazi-v6.0.0.apk" class="dl-apk" title="Direct APK install (v6.0.0)" aria-label="Install the APK directly">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><polyline points="7 10 12 15 17 10"/><path d="M5 21h14"/></svg>
+                        Install
                     </a>
                 </div>
                 <div class="hero-chips rv in">
@@ -702,8 +708,9 @@
                 <a href='https://raazi-music-player.en.uptodown.com/android' title='Download Raazi Music Player' class="dl-badge">
                     <img src='https://stc.utdstc.com/img/mediakit/download-gio-big.png' alt='Download Raazi Music Player'>
                 </a>
-                <a href="https://github.com/israrxy/Raazi/releases/download/v6.0.0/Raazi-v6.0.0.apk" class="dl-apk" title="Direct APK download (v6.0.0)" aria-label="Direct APK download">
-                    <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><polyline points="7 10 12 15 17 10"/><path d="M5 21h14"/></svg>
+                <a href="https://github.com/israrxy/Raazi/releases/download/v6.0.0/Raazi-v6.0.0.apk" class="dl-apk" title="Direct APK install (v6.0.0)" aria-label="Install the APK directly">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><polyline points="7 10 12 15 17 10"/><path d="M5 21h14"/></svg>
+                    Install
                 </a>
             </div>
             <p class="cta-ver">v6.0.0 &middot; Android 7.0+ &middot; GPL-3.0 &middot; 21 MB</p>
