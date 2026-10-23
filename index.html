@@ -2,318 +2,813 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="google-site-verification" content="sry79unL3BBhXd1Rd1Em4XG-eJE_vH5t_4sYpKZ_q1k">
-    <meta name="description" content="Raazi — Free, open-source Android music player. Stream from YouTube Music, manage local files, download songs. No ads, no tracking.">
-    <meta name="theme-color" content="#10b981">
-    <title>Raazi — Free Music Player for Android</title>
+    <meta name="description" content="Raazi v6.0.0 — Free, open-source Android music player. Stream from YouTube Music, play local files, download songs offline. No ads, no tracking. Smarter queue, centred synced lyrics, leaner playback engine.">
+    <meta name="theme-color" content="#04080a">
+    <meta property="og:title" content="Raazi — Free Music Player for Android">
+    <meta property="og:description" content="Stream YouTube Music, play local files, download songs. v6.0.0 out now — smarter queue, centred synced lyrics, leaner playback engine.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://raazi.pages.dev">
+    <meta property="og:image" content="https://github.com/israrxy/Raazi/raw/main/Raazi.png">
+    <title>Raazi — Free Music Player for Android · v6.0.0</title>
     <link rel="icon" href="https://github.com/israrxy/Raazi/raw/main/Raazi.png">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        emerald: {
-                            50: '#ecfdf5', 100: '#d1fae5', 200: '#a7f3d0', 300: '#6ee7b7',
-                            400: '#34d399', 500: '#10b981', 600: '#059669', 700: '#047857',
-                            800: '#065f46', 900: '#064e3b', 950: '#022c22'
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background: #000; color: #fff; scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
-        .hero-glow { background: radial-gradient(ellipse at 50% 0%, rgba(16,185,129,0.15) 0%, transparent 60%); }
-        .glass { background: rgba(255,255,255,0.04); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.06); }
-        .glow-btn { box-shadow: 0 0 24px rgba(16,185,129,0.35); transition: all 0.3s; }
-        .glow-btn:hover { box-shadow: 0 0 40px rgba(16,185,129,0.5); transform: translateY(-2px); }
-        .feat-card { transition: all 0.3s; }
-        .feat-card:hover { border-color: rgba(16,185,129,0.4); background: rgba(16,185,129,0.04); transform: translateY(-4px); }
-        @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
-        .float { animation: float 5s ease-in-out infinite; }
-        @keyframes fadeUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
-        .fade-up { animation: fadeUp 0.8s ease-out forwards; }
-        .ss-scroll { scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
-        .ss-scroll::-webkit-scrollbar { display: none; }
-        .ss-scroll > div { scroll-snap-align: center; }
-        .text-glow { text-shadow: 0 0 40px rgba(16,185,129,0.3); }
-        .btn-download-desktop { display: none; }
-        .btn-download-mobile { display: inline-flex; }
-        @media (min-width: 768px) {
-            .btn-download-desktop { display: inline-flex; }
-            .btn-download-mobile { display: none; }
+        :root {
+            --bg: #04080a;
+            --bg-2: #060d10;
+            --panel: rgba(255, 255, 255, 0.035);
+            --panel-2: rgba(255, 255, 255, 0.055);
+            --line: rgba(255, 255, 255, 0.09);
+            --line-2: rgba(16, 185, 129, 0.35);
+            --txt: #eef6f2;
+            --mut: #93a59d;
+            --dim: #5f7069;
+            --g1: #10b981;
+            --g2: #34d399;
+            --g3: #a7f3d0;
+            --green-grad: linear-gradient(180deg, #12c98e 0%, #0aa876 100%);
+            --radius: 22px;
         }
-        .nav-blur { backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); background: rgba(0,0,0,0.7); }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; scroll-padding-top: 84px; }
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--txt);
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+            line-height: 1.5;
+        }
+        body::before {
+            content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+            background:
+                radial-gradient(1000px 500px at 50% -10%, rgba(16, 185, 129, 0.14), transparent 65%),
+                radial-gradient(700px 500px at 85% 20%, rgba(16, 185, 129, 0.05), transparent 60%),
+                radial-gradient(700px 500px at 10% 60%, rgba(16, 185, 129, 0.04), transparent 60%);
+        }
+        img { max-width: 100%; display: block; }
+        a { color: inherit; text-decoration: none; }
+        h1, h2, h3, .display { font-family: 'Outfit', 'Inter', sans-serif; letter-spacing: -0.02em; }
+        .container { width: min(1120px, 100% - 40px); margin-inline: auto; }
+        .grad-text {
+            background: linear-gradient(135deg, var(--g3) 0%, var(--g1) 55%, #0d9f6f 100%);
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+        }
+
+        /* ---------- reveal animations ---------- */
+        .rv { opacity: 0; transform: translateY(26px); transition: opacity .7s ease, transform .7s cubic-bezier(.2,.7,.3,1); }
+        .rv.in { opacity: 1; transform: none; }
+        @media (prefers-reduced-motion: reduce) {
+            .rv { opacity: 1; transform: none; transition: none; }
+            * { animation: none !important; }
+        }
+
+        /* ---------- nav ---------- */
+        nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 60;
+            background: rgba(4, 8, 10, 0.72); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+            border-bottom: 1px solid transparent; transition: border-color .3s;
+        }
+        nav.scrolled { border-bottom-color: rgba(255,255,255,0.07); }
+        .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 68px; }
+        .brand { display: flex; align-items: center; gap: 11px; }
+        .brand img { width: 38px; height: 38px; border-radius: 11px; border: 1px solid rgba(16,185,129,.28); box-shadow: 0 4px 18px rgba(0,0,0,.5); }
+        .brand b { font-family: 'Outfit'; font-size: 19px; font-weight: 800; letter-spacing: .02em; }
+        .brand small { display: block; font-size: 10px; color: var(--dim); font-weight: 600; letter-spacing: .14em; text-transform: uppercase; margin-top: -3px; }
+        .nav-links { display: flex; align-items: center; gap: 28px; font-size: 14px; font-weight: 600; color: var(--mut); }
+        .nav-links a:hover { color: var(--g2); }
+        .nav-cta {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: var(--green-grad); color: #04170f; font-weight: 800; font-size: 13.5px;
+            padding: 10px 18px; border-radius: 999px; box-shadow: 0 4px 20px rgba(16,185,129,.35);
+            transition: transform .25s, box-shadow .25s;
+        }
+        .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 6px 28px rgba(16,185,129,.5); }
+
+        /* ---------- buttons ---------- */
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+            font-weight: 700; border-radius: 16px; transition: transform .25s, box-shadow .25s, background .25s, border-color .25s;
+            cursor: pointer; white-space: nowrap;
+        }
+        .btn-green {
+            background: var(--green-grad); color: #04170f; font-size: 15px; padding: 15px 28px;
+            box-shadow: 0 6px 26px rgba(16,185,129,.38);
+        }
+        .btn-green:hover { transform: translateY(-2px); box-shadow: 0 10px 34px rgba(16,185,129,.5); }
+        .btn-ghost {
+            border: 1px solid var(--line); background: var(--panel); color: var(--txt); font-size: 15px; padding: 14px 24px;
+        }
+        .btn-ghost:hover { border-color: var(--line-2); background: rgba(16,185,129,.07); transform: translateY(-2px); }
+        .btn svg { flex: none; }
+        .pill {
+            display: inline-flex; align-items: center; gap: 7px; font-size: 12px; font-weight: 600;
+            color: var(--mut); border: 1px solid var(--line); border-radius: 999px; padding: 7px 13px; background: var(--panel);
+        }
+        .pill .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--g1); box-shadow: 0 0 10px var(--g1); }
+
+        /* =================== HERO =================== */
+        .hero { padding: 118px 0 40px; position: relative; }
+
+        /* --- mobile: Play Store style identity block (shown by default; hidden ≥861px) --- */
+        .desktop-hero { display: none; }
+        .ph-top { display: flex; gap: 18px; align-items: center; }
+        .ph-icon {
+            width: 92px; height: 92px; flex: none; border-radius: 26px; overflow: hidden;
+            box-shadow: 0 14px 34px rgba(0,0,0,.55), 0 0 0 1px rgba(16,185,129,.25);
+        }
+        .ph-info h1 { font-size: 27px; font-weight: 800; line-height: 1.1; }
+        .ph-dev { font-size: 13px; color: var(--mut); font-weight: 600; margin-top: 3px; }
+        .ph-dev a { color: var(--g2); }
+        .ph-dev .vitem { color: var(--dim); }
+        .ph-badges { display: flex; gap: 7px; margin-top: 10px; flex-wrap: wrap; }
+        .ph-badge { font-size: 11px; font-weight: 700; color: var(--g3); background: rgba(16,185,129,.09); border: 1px solid rgba(16,185,129,.22); padding: 4px 10px; border-radius: 999px; }
+        .ph-stats { display: grid; grid-template-columns: 1fr 1fr 1fr; border: 1px solid var(--line); border-radius: 18px; margin: 22px 0 18px; background: var(--panel); }
+        .ph-stat { padding: 13px 6px; text-align: center; }
+        .ph-stat + .ph-stat { border-left: 1px solid var(--line); }
+        .ph-stat b { font-size: 16.5px; font-weight: 800; display: block; font-family: 'Outfit'; }
+        .ph-stat span { font-size: 11px; color: var(--dim); font-weight: 600; }
+        .ph-install { display: flex; gap: 10px; }
+        .install-btn {
+            flex: 1; height: 52px; border-radius: 15px; background: var(--green-grad);
+            color: #04170f; font-weight: 800; font-size: 16.5px; font-family: 'Outfit';
+            display: flex; align-items: center; justify-content: center; gap: 9px;
+            box-shadow: 0 8px 30px rgba(16,185,129,.4); transition: transform .2s, box-shadow .2s;
+        }
+        .install-btn:active { transform: scale(.98); }
+        .ph-mini {
+            width: 52px; height: 52px; flex: none; border-radius: 15px; border: 1px solid var(--line);
+            background: var(--panel); display: flex; align-items: center; justify-content: center; color: var(--mut);
+            transition: border-color .2s, color .2s;
+        }
+        .ph-mini:hover { border-color: var(--line-2); color: var(--g2); }
+        .ph-note { text-align: center; font-size: 11.5px; color: var(--dim); font-weight: 500; margin-top: 12px; }
+        .ph-note a { color: var(--g2); font-weight: 600; }
+
+        /* --- desktop hero --- */
+        .desktop-hero { display: grid; grid-template-columns: 1.05fr .95fr; gap: 56px; align-items: center; padding: 26px 0 10px; }
+        .announce { margin-bottom: 18px; }
+        .announce a:hover { border-color: var(--line-2); color: var(--g3); }
+        .desktop-hero h1 { font-size: clamp(44px, 5.4vw, 74px); font-weight: 900; line-height: .98; letter-spacing: -0.035em; }
+        .desktop-hero .lead { color: var(--mut); font-size: 17px; line-height: 1.65; max-width: 480px; margin: 20px 0 30px; }
+        .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; }
+        .hero-chips { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 26px; }
+
+        /* phone mockup */
+        .hero-phone { position: relative; display: flex; justify-content: center; }
+        .phone-frame {
+            width: 300px; aspect-ratio: 9 / 18.6; border-radius: 42px; overflow: hidden;
+            border: 1px solid rgba(255,255,255,.14); box-shadow: 0 40px 90px rgba(0,0,0,.65), 0 0 0 9px #0b0f12;
+            position: relative; z-index: 2; background: #000;
+        }
+        .phone-frame img { width: 100%; height: 100%; object-fit: cover; }
+        .phone-glow { position: absolute; inset: -60px; background: radial-gradient(circle at 50% 40%, rgba(16,185,129,.25), transparent 60%); filter: blur(30px); z-index: 1; }
+        .float-card {
+            position: absolute; z-index: 3; display: flex; align-items: center; gap: 11px;
+            background: rgba(10, 16, 14, .82); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+            border: 1px solid var(--line); border-radius: 17px; padding: 12px 16px;
+            box-shadow: 0 18px 44px rgba(0,0,0,.55); font-size: 12.5px; font-weight: 600;
+            animation: floaty 5.5s ease-in-out infinite;
+        }
+        .fc-1 { top: 15%; left: -7%; display: flex; }
+        .fc-2 { bottom: 13%; right: -8%; animation-delay: -2.7s; }
+        .float-card .ic {
+            width: 36px; height: 36px; flex: none; border-radius: 11px; display: flex; align-items: center; justify-content: center;
+            background: rgba(16,185,129,.14); color: var(--g2);
+        }
+        .float-card small { display: block; color: var(--dim); font-weight: 500; font-size: 11px; }
+        @keyframes floaty { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-11px); } }
+
+        /* ---------- section heading ---------- */
+        section { padding: 74px 0; }
+        .sec-head { margin-bottom: 40px; }
+        .sec-head .kicker { font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: var(--g1); font-weight: 700; margin-bottom: 10px; }
+        .sec-head h2 { font-size: clamp(30px, 3.6vw, 44px); font-weight: 800; }
+        .sec-head p { color: var(--mut); margin-top: 10px; font-size: 15.5px; max-width: 560px; }
+        .sec-head.center { text-align: center; }
+        .sec-head.center p { margin-inline: auto; }
+
+        /* =================== SCREENSHOTS =================== */
+        .shots-scroll {
+            display: flex; gap: 16px; overflow-x: auto; padding: 10px 20px 26px;
+            scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none;
+            margin-inline: -20px; width: calc(100% + 40px);
+        }
+        .shots-scroll::-webkit-scrollbar { display: none; }
+        .shot { flex: none; scroll-snap-align: center; height: 470px; border-radius: 24px; overflow: hidden;
+            border: 1px solid var(--line); box-shadow: 0 14px 40px rgba(0,0,0,.45);
+            transition: border-color .3s, transform .3s; position: relative; }
+        .shot img { height: 100%; width: auto; }
+        .shot:hover { border-color: rgba(16,185,129,.45); transform: translateY(-4px); }
+        .shot figcaption {
+            position: absolute; left: 10px; bottom: 10px; right: auto; font-size: 10.5px; font-weight: 700; letter-spacing: .06em;
+            text-transform: uppercase; color: var(--g3); background: rgba(4,8,6,.72); backdrop-filter: blur(8px);
+            border: 1px solid rgba(16,185,129,.25); padding: 5px 10px; border-radius: 999px;
+        }
+        .shots-hint { text-align: center; color: var(--dim); font-size: 12.5px; font-weight: 600; }
+
+        /* =================== FEATURES =================== */
+        .feat-grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
+        .feat {
+            background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px;
+            transition: transform .3s, border-color .3s, background .3s; position: relative; overflow: hidden;
+        }
+        .feat::after { content: ""; position: absolute; inset: 0; background: radial-gradient(320px 130px at var(--mx,50%) -20%, rgba(16,185,129,.12), transparent 70%); opacity: 0; transition: opacity .3s; pointer-events: none; }
+        .feat:hover { transform: translateY(-4px); border-color: rgba(16,185,129,.35); }
+        .feat:hover::after { opacity: 1; }
+        .feat .ic {
+            width: 46px; height: 46px; border-radius: 14px; display: flex; align-items: center; justify-content: center;
+            background: rgba(16,185,129,.1); color: var(--g2); margin-bottom: 16px;
+        }
+        .feat h3 { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
+        .feat p { color: var(--mut); font-size: 13.8px; line-height: 1.6; }
+
+        /* =================== RELEASE NOTES =================== */
+        .rel-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+        .rel-card {
+            background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
+            overflow: hidden; transition: border-color .3s;
+        }
+        .rel-card[open] { border-color: rgba(16,185,129,.32); }
+        .rel-card[open] .chev { transform: rotate(180deg); }
+        .rel-card summary { list-style: none; display: flex; align-items: center; gap: 13px; padding: 18px 20px; cursor: pointer; user-select: none; }
+        .rel-card summary::-webkit-details-marker { display: none; }
+        .rel-body { padding: 4px 20px 22px; }
+        .rel-latest { border-color: rgba(16,185,129,.4); background: linear-gradient(180deg, rgba(16,185,129,.07), rgba(16,185,129,.02)); }
+        .rel-v {
+            font-family: 'Outfit'; font-weight: 800; font-size: 15px; color: var(--g3);
+            background: rgba(16,185,129,.12); border: 1px solid rgba(16,185,129,.3); padding: 6px 13px; border-radius: 999px; white-space: nowrap;
+        }
+        .rel-tag { font-size: 10px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: #04150e; background: var(--green-grad); padding: 4px 9px; border-radius: 999px; white-space: nowrap; }
+        .rel-meta { font-size: 12.5px; color: var(--dim); font-weight: 500; flex: 1; min-width: 0; }
+        .rel-meta b { color: var(--mut); }
+        .chev { margin-left: auto; color: var(--dim); transition: transform .3s; flex: none; }
+        .rg { margin-top: 14px; }
+        .rg-label { font-size: 11px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--g1); margin-bottom: 8px; }
+        .rg ul { list-style: none; }
+        .rg li { position: relative; padding-left: 20px; color: var(--mut); font-size: 13.8px; line-height: 1.65; margin-bottom: 6px; }
+        .rg li::before { content: ""; position: absolute; left: 4px; top: 9px; width: 6px; height: 6px; border-radius: 50%; background: var(--g1); opacity: .8; }
+        .rg li b { color: var(--txt); font-weight: 600; }
+        .rel-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 22px; }
+        .rel-actions .btn { padding: 12px 20px; font-size: 13.5px; border-radius: 13px; }
+        .rel-actions .apk { background: var(--green-grad); color: #04170f; box-shadow: 0 4px 18px rgba(16,185,129,.3); }
+        .rel-actions .apk:hover { transform: translateY(-2px); }
+        .rel-actions .gh { border: 1px solid var(--line); color: var(--mut); background: transparent; }
+        .rel-actions .gh:hover { border-color: var(--line-2); color: var(--g2); }
+        .changelog-link { text-align: center; margin-top: 26px; }
+        .changelog-link a { color: var(--g2); font-weight: 700; font-size: 14px; }
+        .changelog-link a:hover { text-decoration: underline; }
+
+        /* =================== TECH =================== */
+        .tech-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .tech { background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 18px 16px; text-align: center; transition: border-color .3s, transform .3s; }
+        .tech:hover { border-color: rgba(16,185,129,.3); transform: translateY(-3px); }
+        .tech span { display: block; font-size: 10.5px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--g1); margin-bottom: 5px; }
+        .tech b { font-family: 'Outfit'; font-size: 15.5px; font-weight: 700; }
+
+        /* =================== CTA =================== */
+        .cta-card {
+            position: relative; border-radius: 30px; padding: 54px 30px; text-align: center;
+            background: linear-gradient(180deg, rgba(16,185,129,.09), rgba(16,185,129,.015));
+            border: 1px solid rgba(16,185,129,.25); overflow: hidden;
+        }
+        .cta-card::before { content: ""; position: absolute; top: -120px; left: 50%; transform: translateX(-50%); width: 520px; height: 260px; background: radial-gradient(closest-side, rgba(16,185,129,.28), transparent); filter: blur(24px); }
+        .cta-card h2 { font-size: clamp(30px, 4vw, 46px); font-weight: 900; letter-spacing: -0.03em; }
+        .cta-card p { color: var(--mut); margin: 12px auto 30px; max-width: 420px; }
+        .cta-btns { display: flex; gap: 13px; justify-content: center; flex-wrap: wrap; position: relative; }
+        .cta-ver { margin-top: 18px; font-size: 12px; color: var(--dim); font-weight: 600; position: relative; }
+
+        /* =================== FOOTER =================== */
+        footer { border-top: 1px solid var(--line); padding: 46px 0 96px; }
+        .foot-grid { display: grid; gap: 34px; }
+        .foot-brand { display: flex; align-items: center; gap: 12px; }
+        .foot-brand img { width: 42px; height: 42px; border-radius: 12px; }
+        .foot-brand b { font-family: 'Outfit'; font-size: 19px; font-weight: 800; display: block; }
+        .foot-brand small { color: var(--dim); font-size: 12px; font-weight: 500; }
+        .foot-col b { display: block; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--g1); font-weight: 800; margin-bottom: 12px; }
+        .foot-col a { display: block; color: var(--mut); font-size: 13.5px; font-weight: 500; padding: 5px 0; }
+        .foot-col a:hover { color: var(--g2); }
+        .foot-bottom { margin-top: 38px; padding-top: 22px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; color: var(--dim); font-size: 12px; }
+        .foot-bottom a { color: var(--mut); font-weight: 600; }
+        .foot-bottom a:hover { color: var(--g2); }
+
+        /* =================== MOBILE STICKY INSTALL BAR (Play Store style) =================== */
+        .install-bar {
+            position: fixed; left: 0; right: 0; bottom: 0; z-index: 70;
+            background: rgba(7, 12, 10, .85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid var(--line);
+            display: flex; align-items: center; gap: 12px; padding: 11px 16px calc(11px + env(safe-area-inset-bottom));
+            transform: translateY(110%); transition: transform .35s cubic-bezier(.2,.7,.3,1);
+        }
+        .install-bar.show { transform: none; }
+        .install-bar img { width: 42px; height: 42px; border-radius: 12px; flex: none; }
+        .install-bar .ib-info { flex: 1; min-width: 0; line-height: 1.2; }
+        .install-bar .ib-info b { font-family: 'Outfit'; font-size: 14.5px; font-weight: 700; display: block; }
+        .install-bar .ib-info span { font-size: 11px; color: var(--dim); font-weight: 600; }
+        .ib-btn {
+            flex: none; background: var(--green-grad); color: #04170f; font-family: 'Outfit'; font-weight: 800; font-size: 14.5px;
+            padding: 11px 26px; border-radius: 999px; box-shadow: 0 4px 18px rgba(16,185,129,.4);
+        }
+        .ib-btn:active { transform: scale(.97); }
+
+        /* ================================================================
+           DESKTOP BREAKPOINT
+        ================================================================ */
+        @media (min-width: 861px) {
+            .play-hero, .install-bar { display: none !important; }
+            .desktop-hero { display: grid; }
+            .hero { padding-top: 150px; }
+            section { padding: 96px 0; }
+            .feat-grid { grid-template-columns: repeat(3, 1fr); gap: 18px; }
+            .tech-grid { grid-template-columns: repeat(3, 1fr); }
+            .rel-grid { grid-template-columns: 1fr 1fr; }
+            .rel-grid .rel-card:first-child { grid-column: 1 / -1; }
+            .shots-scroll { margin-inline: 0; width: 100%; padding-bottom: 30px; }
+            footer { padding-bottom: 56px; }
+            .foot-grid { grid-template-columns: 1.4fr 1fr 1fr 1fr; align-items: start; }
+        }
+        @media (min-width: 620px) and (max-width: 860px) {
+            .feat-grid { grid-template-columns: 1fr 1fr; }
+            .tech-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+        /* Reorder sections on mobile: hero → shots → what's new (Play flow) */
+        @media (max-width: 860px) {
+            .nav-links a:not(.nav-cta) { display: none; }
+            body { display: flex; flex-direction: column; }
+            body > * { width: 100%; }
+            .hero { order: 0; }
+            #screenshots { order: 1; }
+            #whatsnew { order: 2; }
+            #features { order: 3; }
+            #tech { order: 4; }
+            .cta-sec { order: 5; }
+            footer { order: 6; }
+        }
     </style>
 </head>
 <body>
 
-<!-- Nav -->
-<nav class="fixed top-0 w-full z-50 nav-blur border-b border-white/5">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-        <a href="#" class="flex items-center gap-2.5">
-            <img src="https://github.com/israrxy/Raazi/raw/main/Raazi.png" alt="Raazi" class="w-9 h-9 rounded-xl border border-emerald-500/20">
-            <span class="text-lg font-black tracking-tight">RAAZI</span>
+<!-- ===================== NAV ===================== -->
+<nav id="nav">
+    <div class="container nav-inner">
+        <a href="#" class="brand">
+            <img src="https://github.com/israrxy/Raazi/raw/main/Raazi.png" alt="Raazi logo">
+            <span><b>RAAZI</b><small>Music Player</small></span>
         </a>
-        <div class="hidden md:flex items-center gap-7 text-sm font-medium text-zinc-400">
-            <a href="#features" class="hover:text-emerald-400 transition-colors">Features</a>
-            <a href="#screenshots" class="hover:text-emerald-400 transition-colors">Screenshots</a>
-            <a href="#tech" class="hover:text-emerald-400 transition-colors">Tech</a>
-            <a href="https://github.com/israrxy/Raazi" class="hover:text-emerald-400 transition-colors flex items-center gap-1.5">
-                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.43.372.823 1.102.823 2.222 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+        <div class="nav-links">
+            <a href="#features">Features</a>
+            <a href="#screenshots">Screenshots</a>
+            <a href="#whatsnew">What's New</a>
+            <a href="#tech">Tech</a>
+            <a href="https://github.com/israrxy/Raazi" target="_blank" rel="noopener">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.43.372.823 1.102.823 2.222 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
                 Source
             </a>
+            <a href="https://github.com/israrxy/Raazi/releases/download/v6.0.0/Raazi-v6.0.0.apk" class="nav-cta">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3v10.55A4 4 0 1014 17V7h4V3h-6z"/></svg>
+                Get v6.0.0
+            </a>
         </div>
-        <a href="https://github.com/israrxy/Raazi/releases/download/v4.5.1/Raazi-v4.5.1.apk" class="bg-emerald-500 hover:bg-emerald-400 text-black px-5 py-2 rounded-xl text-sm font-bold transition-all md:hidden">Download</a>
     </div>
 </nav>
 
-<!-- Hero -->
-<section class="relative pt-28 pb-16 md:pt-40 md:pb-28 hero-glow overflow-hidden">
-    <div class="absolute inset-0 pointer-events-none">
-        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] md:w-[900px] h-[400px] bg-emerald-500/8 blur-[100px] rounded-full"></div>
-    </div>
-    <div class="relative z-10 max-w-5xl mx-auto px-4 text-center">
-        <img src="https://github.com/israrxy/Raazi/raw/main/Raazi.png" alt="Raazi Logo" class="w-24 h-24 md:w-36 md:h-36 mx-auto mb-6 rounded-[2rem] shadow-2xl border border-emerald-500/20 float">
+<!-- ===================== HERO (Play Store identity on mobile) ===================== -->
+<header class="hero">
+    <div class="container">
 
-        <h1 class="text-5xl md:text-8xl font-black tracking-tighter mb-4 leading-[0.9]">
-            Free Your<br><span class="text-emerald-500 text-glow">Music.</span>
-        </h1>
-        <p class="text-zinc-400 text-base md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed font-medium">
-            A modern, privacy-first music player for Android. Stream from YouTube Music, play local files, download songs — all ad-free.
+        <!-- Mobile: Play-Store-like app identity -->
+        <div class="play-hero rv in">
+            <div class="ph-top">
+                <img class="ph-icon" src="https://github.com/israrxy/Raazi/raw/main/Raazi.png" alt="Raazi app icon">
+                <div class="ph-info">
+                    <h1>Raazi</h1>
+                    <div class="ph-dev">
+                        <a href="https://github.com/israrxy" target="_blank" rel="noopener">Israrxy</a>
+                        <span class="vitem"> · Music &amp; Audio</span>
+                    </div>
+                    <div class="ph-badges">
+                        <span class="ph-badge">No ads</span>
+                        <span class="ph-badge">No tracking</span>
+                        <span class="ph-badge">Offline</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ph-stats">
+                <div class="ph-stat"><b>1.8K+</b><span>Downloads</span></div>
+                <div class="ph-stat"><b>21 MB</b><span>APK Size</span></div>
+                <div class="ph-stat"><b>v6.0.0</b><span>Latest</span></div>
+            </div>
+
+            <div class="ph-install">
+                <a href="https://github.com/israrxy/Raazi/releases/download/v6.0.0/Raazi-v6.0.0.apk" class="install-btn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M5 20h14v-2H5v2zM19 9h-4V3H9v6H5l7 7 7-7z"/></svg>
+                    Install
+                </a>
+                <a href="https://raazi-music-player.en.uptodown.com/android" class="ph-mini" title="Get from Uptodown" target="_blank" rel="noopener">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                </a>
+            </div>
+            <p class="ph-note">Requires Android 7.0+ · APK direct install · Also listed on <a href="https://raazi-music-player.en.uptodown.com/android" target="_blank" rel="noopener">Uptodown</a></p>
+        </div>
+
+        <!-- Desktop hero -->
+        <div class="desktop-hero">
+            <div>
+                <div class="announce rv in">
+                    <a href="#whatsnew" class="pill">
+                        <span class="dot"></span> New &middot; v6.0.0 — Queue overhaul &amp; lyrics polish
+                    </a>
+                </div>
+                <h1 class="rv in">Your Music.<br><span class="grad-text">No Limits.</span></h1>
+                <p class="lead rv in">
+                    A free, open-source music player for Android. Stream the entire YouTube
+                    Music catalogue, play your local library, and download songs for offline —
+                    all with zero ads and zero tracking.
+                </p>
+                <div class="hero-btns rv in">
+                    <a href="https://github.com/israrxy/Raazi/releases/download/v6.0.0/Raazi-v6.0.0.apk" class="btn btn-green">
+                        <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><path d="M6 18c0 .55.45 1 1 1h1v3.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5V19h2v3.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5V19h1c.55 0 1-.45 1-1V8H6v10zM3.5 8C2.67 8 2 8.67 2 9.5v7c0 .83.67 1.5 1.5 1.5S5 17.33 5 16.5v-7C5 8.67 4.33 8 3.5 8zm17 0c-.83 0-1.5.67-1.5 1.5v7c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5v-7c0-.83-.67-1.5-1.5-1.5zm-4.97-5.84l1.3-1.3c.2-.2.2-.51 0-.71-.2-.2-.51-.2-.71 0l-1.48 1.48A5.965 5.965 0 0012 1c-.96 0-1.86.23-2.66.63L7.85.15c-.2-.2-.51-.2-.71 0-.2.2-.2.51 0 .71l1.31 1.31A5.966 5.966 0 006 7h12c0-2.21-1.2-4.15-2.97-5.84zM10 5H9V4h1v1zm5 0h-1V4h1v1z"/></svg>
+                        Download APK — v6.0.0
+                    </a>
+                    <a href="https://raazi-music-player.en.uptodown.com/android" class="btn btn-ghost" target="_blank" rel="noopener">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                        Get from Uptodown
+                    </a>
+                </div>
+                <div class="hero-chips rv in">
+                    <span class="pill"><span class="dot"></span> Free &amp; open source (GPL-3.0)</span>
+                    <span class="pill">Android 7.0+</span>
+                    <span class="pill">21 MB</span>
+                    <span class="pill">1.8K+ downloads</span>
+                </div>
+            </div>
+
+            <div class="hero-phone rv in">
+                <div class="phone-glow"></div>
+                <div class="phone-frame">
+                    <img src="Assets/Screenshots/ss-2.jpg" alt="Raazi player screen">
+                </div>
+                <div class="float-card fc-1">
+                    <div class="ic">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3v10.55A4 4 0 1014 17V7h4V3h-6z"/></svg>
+                    </div>
+                    <div>Now Playing<small>Synced lyrics &middot; centred &amp; smooth</small></div>
+                </div>
+                <div class="float-card fc-2">
+                    <div class="ic">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                    </div>
+                    <div>Queue, rebuilt<small>Fresh sessions &middot; real playlist order</small></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main>
+
+<!-- ===================== SCREENSHOTS ===================== -->
+<section id="screenshots">
+    <div class="container">
+        <div class="sec-head center">
+            <p class="kicker">Gallery</p>
+            <h2>See It in Action</h2>
+            <p>Screenshots straight from the app — swipe through on mobile.</p>
+        </div>
+        <div class="shots-scroll" id="shots">
+            <figure class="shot"><img src="Assets/Screenshots/ss-1.jpg" alt="Raazi home screen" loading="lazy"><figcaption>Home</figcaption></figure>
+            <figure class="shot"><img src="Assets/Screenshots/ss-2.jpg" alt="Raazi player screen" loading="lazy"><figcaption>Player</figcaption></figure>
+            <figure class="shot"><img src="Assets/Screenshots/ss-3.jpg" alt="Raazi library screen" loading="lazy"><figcaption>Library</figcaption></figure>
+            <figure class="shot"><img src="Assets/Screenshots/ss-4.jpg" alt="Raazi search screen" loading="lazy"><figcaption>Search</figcaption></figure>
+            <figure class="shot"><img src="Assets/Screenshots/ss-5.jpg" alt="Raazi playlist screen" loading="lazy"><figcaption>Playlists</figcaption></figure>
+            <figure class="shot"><img src="Assets/Screenshots/ss-6.jpg" alt="Raazi downloads screen" loading="lazy"><figcaption>Downloads</figcaption></figure>
+            <figure class="shot"><img src="Assets/Screenshots/ss-7.jpg" alt="Raazi settings screen" loading="lazy"><figcaption>Settings</figcaption></figure>
+            <figure class="shot"><img src="Assets/Screenshots/ss-8.jpg" alt="Raazi queue screen" loading="lazy"><figcaption>Queue</figcaption></figure>
+            <figure class="shot"><img src="Assets/Screenshots/ss-9.jpg" alt="Raazi artist screen" loading="lazy"><figcaption>Artist</figcaption></figure>
+            <figure class="shot"><img src="Assets/Screenshots/ss-10.jpg" alt="Raazi screen" loading="lazy"><figcaption>Browse</figcaption></figure>
+            <figure class="shot"><img src="Assets/Screenshots/ss-11.jpg" alt="Raazi screen" loading="lazy"><figcaption>Lyrics</figcaption></figure>
+        </div>
+    </div>
+</section>
+
+<!-- ===================== RELEASE NOTES ===================== -->
+<section id="whatsnew">
+    <div class="container">
+        <div class="sec-head">
+            <p class="kicker">Changelog</p>
+            <h2>What's New</h2>
+            <p>Every update, straight from the source. Latest version: <b style="color:var(--g2)">v6.0.0</b>.</p>
+        </div>
+
+        <div class="rel-grid">
+
+            <!-- v6.0.0 — LATEST -->
+            <details class="rel-card rel-latest" open>
+                <summary>
+                    <span class="rel-v">v6.0.0</span>
+                    <span class="rel-tag">Latest</span>
+                    <span class="rel-meta"><b>Queue overhaul, lyrics polish, playback clean-up</b> · Oct 23, 2026 · 21 MB</span>
+                    <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </summary>
+                <div class="rel-body">
+                    <div class="rg">
+                        <div class="rg-label">Queue</div>
+                        <ul>
+                            <li><b>Fresh sessions:</b> playing a song from search now starts a clean single-track session — the whole results list no longer floods your queue.</li>
+                            <li><b>Real playlist order:</b> in stable (non-shuffle) mode, “Next up” plays your queue in the exact order and radio suggestions are hidden.</li>
+                            <li><b>YouTube-style radio:</b> shuffle keeps the “Up next” suggestions, with your own queue listed underneath.</li>
+                        </ul>
+                    </div>
+                    <div class="rg">
+                        <div class="rg-label">Player</div>
+                        <ul>
+                            <li><b>Shuffle &amp; Repeat are back</b> as separate buttons on the player.</li>
+                            <li><b>Video toggle removed:</b> YouTube stopped serving playable video URLs, so it only produced dead ends and failed playback.</li>
+                        </ul>
+                    </div>
+                    <div class="rg">
+                        <div class="rg-label">Lyrics</div>
+                        <ul>
+                            <li><b>Fixed skipped lines:</b> synced lyrics no longer silently skip lines that use <b>[mm:ss]</b> timestamps without a fraction.</li>
+                            <li><b>Centre-stage lyrics:</b> the active line now stays centred on screen as the song plays, instead of sticking to the top edge.</li>
+                        </ul>
+                    </div>
+                    <div class="rg">
+                        <div class="rg-label">Stability</div>
+                        <ul>
+                            <li><b>Leaner playback engine:</b> the stream-resolution stack is inlined into the app — fewer moving parts, smaller installs, properly signed release pipeline.</li>
+                            <li><b>Forward-compatible:</b> version 6.0.0 (8) can install cleanly over this in future updates, no reinstall needed.</li>
+                        </ul>
+                    </div>
+                    <div class="rel-actions">
+                        <a href="https://github.com/israrxy/Raazi/releases/download/v6.0.0/Raazi-v6.0.0.apk" class="btn apk">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                            Download APK
+                        </a>
+                        <a href="https://github.com/israrxy/Raazi/releases/tag/v6.0.0" class="btn gh" target="_blank" rel="noopener">View on GitHub</a>
+                    </div>
+                </div>
+            </details>
+
+            <!-- v4.5.1 -->
+            <details class="rel-card">
+                <summary>
+                    <span class="rel-v">v4.5.1</span>
+                    <span class="rel-meta"><b>Home redesign &amp; performance</b> · May 31, 2026 · 20 MB · 1,655 downloads</span>
+                    <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </summary>
+                <div class="rel-body">
+                    <div class="rg">
+                        <div class="rg-label">Home Screen</div>
+                        <ul>
+                            <li><b>Section-based feed:</b> Keep Listening, Quick Picks, Forgotten Favorites, Recommendations, and YouTube.</li>
+                            <li><b>Time-based greeting</b> (Morning / Afternoon / Evening / Night) with the Raazi branding pill.</li>
+                            <li><b>Keep Listening:</b> full-width resume card for your most recent track plus compact horizontal recents.</li>
+                            <li><b>Local interaction metrics</b> rank your home feed smarter over time.</li>
+                        </ul>
+                    </div>
+                    <div class="rg">
+                        <div class="rg-label">Search</div>
+                        <ul>
+                            <li>Suggestion debounce cut from 300ms to <b>150ms</b>.</li>
+                            <li>Network calls moved to the IO dispatcher — <b>no more main-thread blocking</b>.</li>
+                            <li><b>50-entry LRU cache</b> for instant repeat queries.</li>
+                        </ul>
+                    </div>
+                    <div class="rg">
+                        <div class="rg-label">New Features</div>
+                        <ul>
+                            <li><b>Spotify playlist import</b> — one tap, no more losing your collections.</li>
+                            <li><b>Ringtone trimmer</b> — cut songs into ringtones, alarms, and notifications.</li>
+                            <li>Gemini resolver helper.</li>
+                        </ul>
+                    </div>
+                    <div class="rg">
+                        <div class="rg-label">Stability</div>
+                        <ul>
+                            <li>Stream-resolution timeout protection.</li>
+                            <li>Lifecycle guards against background crashes.</li>
+                            <li>Crash-safe database initialization.</li>
+                            <li>Thread-safe YouTube music extraction.</li>
+                        </ul>
+                    </div>
+                    <div class="rel-actions">
+                        <a href="https://github.com/israrxy/Raazi/releases/download/v4.5.1/Raazi-v4.5.1.apk" class="btn apk">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                            Download APK
+                        </a>
+                        <a href="https://github.com/israrxy/Raazi/releases/tag/v4.5.1" class="btn gh" target="_blank" rel="noopener">View on GitHub</a>
+                    </div>
+                </div>
+            </details>
+
+            <!-- v3.1.1 -->
+            <details class="rel-card">
+                <summary>
+                    <span class="rel-v">v3.1.1</span>
+                    <span class="rel-meta"><b>Stability update</b> · Apr 11, 2026 · 18.7 MB · 144 downloads</span>
+                    <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                </summary>
+                <div class="rel-body">
+                    <div class="rg">
+                        <div class="rg-label">Fixes &amp; Improvements</div>
+                        <ul>
+                            <li><b>Fixed stream-resolution timeouts</b> that caused app freezes (ANRs).</li>
+                            <li><b>Auto-skip</b> to the next track on playback errors instead of crashing.</li>
+                            <li><b>More reliable downloads</b> — fixed file-save failures on some devices.</li>
+                            <li><b>Smarter memory management</b> — no more background task leaks.</li>
+                            <li><b>Crash-safe database</b> — the app recovers gracefully from corruption.</li>
+                            <li><b>Faster startup</b> with the single-init YouTube extractor.</li>
+                        </ul>
+                    </div>
+                    <div class="rel-actions">
+                        <a href="https://github.com/israrxy/Raazi/releases/download/v3.1.1/Raazi-3.1.1.apk" class="btn apk">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                            Download APK
+                        </a>
+                        <a href="https://github.com/israrxy/Raazi/releases/tag/v3.1.1" class="btn gh" target="_blank" rel="noopener">View on GitHub</a>
+                    </div>
+                </div>
+            </details>
+
+        </div>
+
+        <p class="changelog-link">
+            <a href="https://github.com/israrxy/Raazi/releases" target="_blank" rel="noopener">Full release history on GitHub &rarr;</a>
         </p>
-
-        <!-- Download Buttons -->
-        <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <!-- Desktop: Big Uptodown button -->
-            <a href="https://raazi-music-player.en.uptodown.com/android" title="Download Raazi Music Player" class="btn-download-desktop glow-btn">
-                <img src="https://stc.utdstc.com/img/mediakit/download-aao-big.png" alt="Download Raazi Music Player" class="block">
-            </a>
-            <!-- Mobile: Small Uptodown button -->
-            <a href="https://raazi-music-player.en.uptodown.com/android" title="Download Raazi Music Player" class="btn-download-mobile glow-btn">
-                <img src="https://stc.utdstc.com/img/mediakit/download-aao-small.png" alt="Download Raazi Music Player" class="block">
-            </a>
-            <!-- Direct APK Download -->
-            <a href="https://github.com/israrxy/Raazi/releases/download/v4.5.1/Raazi-v4.5.1.apk" class="glow-btn bg-emerald-500 hover:bg-emerald-400 text-black px-8 py-4 rounded-2xl font-bold text-sm sm:text-base flex items-center justify-center gap-2.5 transition-all">
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M6 18c0 .55.45 1 1 1h1v3.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5V19h2v3.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5V19h1c.55 0 1-.45 1-1V8H6v10zM3.5 8C2.67 8 2 8.67 2 9.5v7c0 .83.67 1.5 1.5 1.5S5 17.33 5 16.5v-7C5 8.67 4.33 8 3.5 8zm17 0c-.83 0-1.5.67-1.5 1.5v7c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5v-7c0-.83-.67-1.5-1.5-1.5zm-4.97-5.84l1.3-1.3c.2-.2.2-.51 0-.71-.2-.2-.51-.2-.71 0l-1.48 1.48A5.965 5.965 0 0012 1c-.96 0-1.86.23-2.66.63L7.85.15c-.2-.2-.51-.2-.71 0-.2.2-.2.51 0 .71l1.31 1.31A5.966 5.966 0 006 7h12c0-2.21-1.2-4.15-2.97-5.84zM10 5H9V4h1v1zm5 0h-1V4h1v1z"/></svg>
-                Direct APK v4.5.1
-            </a>
-        </div>
-        <p class="text-zinc-600 text-xs mt-4 font-medium">v4.5.1 &middot; Android 7.0+ &middot; Free &amp; Open Source</p>
     </div>
 </section>
 
-<!-- Screenshots -->
-<section id="screenshots" class="py-16 md:py-24 px-4">
-    <div class="max-w-6xl mx-auto">
-        <h2 class="text-center text-3xl md:text-5xl font-black tracking-tight mb-3">See It in Action</h2>
-        <p class="text-center text-zinc-500 text-sm md:text-base mb-10">Swipe through the app</p>
-        <div class="ss-scroll flex gap-4 overflow-x-auto px-4 pb-6 md:justify-center md:flex-wrap md:gap-6">
-            <div class="flex-shrink-0 w-[160px] md:w-[200px] rounded-2xl overflow-hidden border border-white/10 shadow-xl hover:border-emerald-500/30 transition-all hover:scale-[1.02]">
-                <img src="Assets/Screenshots/ss-1.jpg" alt="Home Screen" class="w-full h-auto" loading="lazy">
-            </div>
-            <div class="flex-shrink-0 w-[160px] md:w-[200px] rounded-2xl overflow-hidden border border-white/10 shadow-xl hover:border-emerald-500/30 transition-all hover:scale-[1.02]">
-                <img src="Assets/Screenshots/ss-2.jpg" alt="Player" class="w-full h-auto" loading="lazy">
-            </div>
-            <div class="flex-shrink-0 w-[160px] md:w-[200px] rounded-2xl overflow-hidden border border-white/10 shadow-xl hover:border-emerald-500/30 transition-all hover:scale-[1.02]">
-                <img src="Assets/Screenshots/ss-3.jpg" alt="Library" class="w-full h-auto" loading="lazy">
-            </div>
-            <div class="flex-shrink-0 w-[160px] md:w-[200px] rounded-2xl overflow-hidden border border-white/10 shadow-xl hover:border-emerald-500/30 transition-all hover:scale-[1.02]">
-                <img src="Assets/Screenshots/ss-4.jpg" alt="Search" class="w-full h-auto" loading="lazy">
-            </div>
-            <div class="flex-shrink-0 w-[160px] md:w-[200px] rounded-2xl overflow-hidden border border-white/10 shadow-xl hover:border-emerald-500/30 transition-all hover:scale-[1.02]">
-                <img src="Assets/Screenshots/ss-5.jpg" alt="Playlist" class="w-full h-auto" loading="lazy">
-            </div>
-            <div class="flex-shrink-0 w-[160px] md:w-[200px] rounded-2xl overflow-hidden border border-white/10 shadow-xl hover:border-emerald-500/30 transition-all hover:scale-[1.02]">
-                <img src="Assets/Screenshots/ss-6.jpg" alt="Downloads" class="w-full h-auto" loading="lazy">
-            </div>
-            <div class="flex-shrink-0 w-[160px] md:w-[200px] rounded-2xl overflow-hidden border border-white/10 shadow-xl hover:border-emerald-500/30 transition-all hover:scale-[1.02]">
-                <img src="Assets/Screenshots/ss-7.jpg" alt="Settings" class="w-full h-auto" loading="lazy">
-            </div>
-            <div class="flex-shrink-0 w-[160px] md:w-[200px] rounded-2xl overflow-hidden border border-white/10 shadow-xl hover:border-emerald-500/30 transition-all hover:scale-[1.02]">
-                <img src="Assets/Screenshots/ss-8.jpg" alt="Queue" class="w-full h-auto" loading="lazy">
-            </div>
-            <div class="flex-shrink-0 w-[160px] md:w-[200px] rounded-2xl overflow-hidden border border-white/10 shadow-xl hover:border-emerald-500/30 transition-all hover:scale-[1.02]">
-                <img src="Assets/Screenshots/ss-9.jpg" alt="Artist" class="w-full h-auto" loading="lazy">
-            </div>
+<!-- ===================== FEATURES ===================== -->
+<section id="features">
+    <div class="container">
+        <div class="sec-head center">
+            <p class="kicker">Features</p>
+            <h2>What You&rsquo;ll Love</h2>
+            <p>One app to stream, discover, and own your music.</p>
         </div>
-    </div>
-</section>
-
-<!-- Features -->
-<section id="features" class="py-16 md:py-24 px-4 bg-black">
-    <div class="max-w-6xl mx-auto">
-        <h2 class="text-center text-3xl md:text-5xl font-black tracking-tight mb-3">Everything You Need</h2>
-        <p class="text-center text-zinc-500 text-sm md:text-base mb-12">One app to play, discover, and own your music</p>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-
-            <div class="feat-card glass p-7 rounded-2xl border border-white/5">
-                <div class="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center mb-4 text-2xl">&#127911;</div>
-                <h3 class="font-bold text-lg mb-2">YouTube Music</h3>
-                <p class="text-zinc-500 text-sm leading-relaxed">Search and stream any song from the entire YouTube Music library. No premium needed.</p>
+        <div class="feat-grid">
+            <div class="feat rv">
+                <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 13c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2c.36 0 .7.1 1 .27V7h6v3c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2c.36 0 .7.1 1 .27V5h-6v8z"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg></div>
+                <h3>YouTube Music</h3>
+                <p>Search and stream any song from the entire YouTube Music library. No premium needed.</p>
             </div>
-
-            <div class="feat-card glass p-7 rounded-2xl border border-white/5">
-                <div class="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center mb-4 text-2xl">&#128274;</div>
-                <h3 class="font-bold text-lg mb-2">Privacy First</h3>
-                <p class="text-zinc-500 text-sm leading-relaxed">No accounts, no tracking, no data collection. Your listening stays on your device.</p>
+            <div class="feat rv">
+                <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 6c1.4 0 2.8 1.1 2.8 2.5V11c.6 0 1.2.6 1.2 1.2v3.5c0 .7-.6 1.3-1.2 1.3h-5.5c-.7 0-1.3-.6-1.3-1.2v-3.5c0-.7.6-1.2 1.2-1.2V9.5C9.2 8.1 10.6 7 12 7zm0 1c-.8 0-1.5.7-1.5 1.5V11h3V9.5c0-.8-.7-1.5-1.5-1.5z"/></svg></div>
+                <h3>Privacy First</h3>
+                <p>No accounts, no tracking, no data collection. Your listening stays on your device.</p>
             </div>
-
-            <div class="feat-card glass p-7 rounded-2xl border border-white/5">
-                <div class="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center mb-4 text-2xl">&#11015;&#65039;</div>
-                <h3 class="font-bold text-lg mb-2">Download Offline</h3>
-                <p class="text-zinc-500 text-sm leading-relaxed">Save songs for offline playback. Background downloading with progress tracking.</p>
+            <div class="feat rv">
+                <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg></div>
+                <h3>Download Offline</h3>
+                <p>Save songs for offline playback with background downloading and progress tracking.</p>
             </div>
-
-            <div class="feat-card glass p-7 rounded-2xl border border-white/5">
-                <div class="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center mb-4 text-2xl">&#127925;</div>
-                <h3 class="font-bold text-lg mb-2">Your Library</h3>
-                <p class="text-zinc-500 text-sm leading-relaxed">Organize favorites, create playlists, browse by artist and album. All your local music in one place.</p>
+            <div class="feat rv">
+                <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M4 6H2v14a2 2 0 002 2h14v-2H4V6zm16-4H8a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V4a2 2 0 00-2-2zm-9.5 3.5A1.5 1.5 0 1112 7a1.5 1.5 0 01-1.5-1.5zM8 15l3-4 2.5 3 2-2.5 3.5 5H8z"/></svg></div>
+                <h3>Your Library</h3>
+                <p>Organize favorites, build playlists, and browse by artist and album — local and streamed in one place.</p>
             </div>
-
-            <div class="feat-card glass p-7 rounded-2xl border border-white/5">
-                <div class="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center mb-4 text-2xl">&#128248;</div>
-                <h3 class="font-bold text-lg mb-2">Beautiful Player</h3>
-                <p class="text-zinc-500 text-sm leading-relaxed">Blur backgrounds, album art, full queue control, shuffle, repeat, and mini player.</p>
+            <div class="feat rv">
+                <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3v10.55A4 4 0 1014 17V7h4V3h-6z"/></svg></div>
+                <h3>Beautiful Player</h3>
+                <p>Album art, blur backgrounds, full queue control, shuffle and repeat, and a slick mini player.</p>
             </div>
-
-            <div class="feat-card glass p-7 rounded-2xl border border-white/5">
-                <div class="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center mb-4 text-2xl">&#127928;</div>
-                <h3 class="font-bold text-lg mb-2">Ringtone Trimmer</h3>
-                <p class="text-zinc-500 text-sm leading-relaxed">Cut your favorite songs and set them as ringtones, alarms, or notifications.</p>
+            <div class="feat rv">
+                <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 3v12"/><circle cx="6" cy="18" r="3"/><path d="M18 9a3 3 0 10-3-3v11.5a3 3 0 11-3-3"/></svg></div>
+                <h3>Ringtone Trimmer</h3>
+                <p>Cut your favourite songs and set them as ringtones, alarms, or notification sounds.</p>
             </div>
-
-            <div class="feat-card glass p-7 rounded-2xl border border-white/5">
-                <div class="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center mb-4 text-2xl">&#128293;</div>
-                <h3 class="font-bold text-lg mb-2">Mood Playlists</h3>
-                <p class="text-zinc-500 text-sm leading-relaxed">Discover music by mood — Workout, Chill, Focus, Party, Sleep, and more genres.</p>
+            <div class="feat rv">
+                <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67zM11.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.59 2.65.59 4.04 0 2.65-2.15 4.8-4.8 4.8z"/></svg></div>
+                <h3>Mood Playlists</h3>
+                <p>Discover music by mood — Workout, Chill, Focus, Party, Sleep, and curated genres.</p>
             </div>
-
-            <div class="feat-card glass p-7 rounded-2xl border border-white/5">
-                <div class="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center mb-4 text-2xl">&#128190;</div>
-                <h3 class="font-bold text-lg mb-2">Spotify Import</h3>
-                <p class="text-zinc-500 text-sm leading-relaxed">Import your Spotify playlists with one tap. Switch without losing your collections.</p>
+            <div class="feat rv">
+                <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zM9.75 15.5a3.75 3.75 0 114.5-3.66 4.19 4.19 0 01-.04.6H16a4.1 4.1 0 00.05-.6 5 5 0 10-5 5.16h.2v-1.5h-.2a3.5 3.5 0 01-1.3-.02z"/></svg></div>
+                <h3>Spotify Import</h3>
+                <p>Import your Spotify playlists with one tap. Switch without losing your collections.</p>
             </div>
-
-            <div class="feat-card glass p-7 rounded-2xl border border-white/5">
-                <div class="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center mb-4 text-2xl">&#128293;</div>
-                <h3 class="font-bold text-lg mb-2">Background Play</h3>
-                <p class="text-zinc-500 text-sm leading-relaxed">Keep music playing with screen off. Full notification and lock screen controls.</p>
-            </div>
-
-        </div>
-    </div>
-</section>
-
-<!-- What's New -->
-<section class="py-16 md:py-24 px-4 border-t border-white/5">
-    <div class="max-w-3xl mx-auto">
-        <h2 class="text-center text-3xl md:text-5xl font-black tracking-tight mb-3">What's New</h2>
-        <p class="text-center text-zinc-500 text-sm md:text-base mb-10">v4.5.1 — Home UI/UX Redesign</p>
-        <div class="glass rounded-2xl p-6 md:p-8 border border-white/5 space-y-4">
-            <div class="flex items-start gap-3">
-                <span class="text-emerald-500 mt-1">&#10003;</span>
-                <div><span class="font-bold">Redesigned Home</span> <span class="text-zinc-500">— Section-based feed with Keep Listening, Quick Picks, and Recommendations</span></div>
-            </div>
-            <div class="flex items-start gap-3">
-                <span class="text-emerald-500 mt-1">&#10003;</span>
-                <div><span class="font-bold">Time-based Greeting</span> <span class="text-zinc-500">— Morning, Afternoon, Evening, and Night greetings</span></div>
-            </div>
-            <div class="flex items-start gap-3">
-                <span class="text-emerald-500 mt-1">&#10003;</span>
-                <div><span class="font-bold">Faster Search</span> <span class="text-zinc-500">— 150ms debounce, IO threading, and instant LRU cache</span></div>
-            </div>
-            <div class="flex items-start gap-3">
-                <span class="text-emerald-500 mt-1">&#10003;</span>
-                <div><span class="font-bold">Ringtone Trimmer</span> <span class="text-zinc-500">— Cut songs and set them as ringtones</span></div>
-            </div>
-            <div class="flex items-start gap-3">
-                <span class="text-emerald-500 mt-1">&#10003;</span>
-                <div><span class="font-bold">Spotify Import</span> <span class="text-zinc-500">— Import playlists from Spotify in one tap</span></div>
-            </div>
-            <div class="flex items-start gap-3">
-                <span class="text-emerald-500 mt-1">&#10003;</span>
-                <div><span class="font-bold">Smart Ranking</span> <span class="text-zinc-500">— Local metrics improve your home feed over time</span></div>
+            <div class="feat rv">
+                <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0014 7.97v8.05A4.5 4.5 0 0016.5 12zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg></div>
+                <h3>Background Play</h3>
+                <p>Keep the music going with the screen off. Full notification and lock-screen controls.</p>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Tech Stack -->
-<section id="tech" class="py-16 md:py-24 px-4 bg-black border-t border-white/5">
-    <div class="max-w-4xl mx-auto">
-        <h2 class="text-center text-3xl md:text-5xl font-black tracking-tight mb-12">Built With</h2>
-        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-            <div class="glass p-5 rounded-xl border border-white/5 text-center">
-                <span class="text-emerald-500 font-bold text-sm block mb-1">Language</span>
-                <span class="text-zinc-300 font-medium">Kotlin</span>
-            </div>
-            <div class="glass p-5 rounded-xl border border-white/5 text-center">
-                <span class="text-emerald-500 font-bold text-sm block mb-1">UI</span>
-                <span class="text-zinc-300 font-medium">Jetpack Compose</span>
-            </div>
-            <div class="glass p-5 rounded-xl border border-white/5 text-center">
-                <span class="text-emerald-500 font-bold text-sm block mb-1">Architecture</span>
-                <span class="text-zinc-300 font-medium">MVVM</span>
-            </div>
-            <div class="glass p-5 rounded-xl border border-white/5 text-center">
-                <span class="text-emerald-500 font-bold text-sm block mb-1">Playback</span>
-                <span class="text-zinc-300 font-medium">Media3 / ExoPlayer</span>
-            </div>
-            <div class="glass p-5 rounded-xl border border-white/5 text-center">
-                <span class="text-emerald-500 font-bold text-sm block mb-1">Database</span>
-                <span class="text-zinc-300 font-medium">Room</span>
-            </div>
-            <div class="glass p-5 rounded-xl border border-white/5 text-center">
-                <span class="text-emerald-500 font-bold text-sm block mb-1">Source</span>
-                <span class="text-zinc-300 font-medium">NewPipe / InnerTube</span>
-            </div>
+<!-- ===================== TECH ===================== -->
+<section id="tech">
+    <div class="container">
+        <div class="sec-head center">
+            <p class="kicker">Under the Hood</p>
+            <h2>Built With</h2>
+        </div>
+        <div class="tech-grid">
+            <div class="tech rv"><span>Language</span><b>Kotlin</b></div>
+            <div class="tech rv"><span>UI</span><b>Jetpack Compose</b></div>
+            <div class="tech rv"><span>Architecture</span><b>MVVM</b></div>
+            <div class="tech rv"><span>Playback</span><b>Media3 / ExoPlayer</b></div>
+            <div class="tech rv"><span>Database</span><b>Room</b></div>
+            <div class="tech rv"><span>Source</span><b>NewPipe / InnerTube</b></div>
         </div>
     </div>
 </section>
 
-<!-- Download CTA -->
-<section class="py-16 md:py-24 px-4">
-    <div class="max-w-3xl mx-auto text-center">
-        <h2 class="text-3xl md:text-5xl font-black tracking-tight mb-4">Ready to Listen?</h2>
-        <p class="text-zinc-500 text-base md:text-lg mb-8">Free, open-source, no ads. Just music.</p>
-        <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <a href="https://raazi-music-player.en.uptodown.com/android" title="Download Raazi Music Player" class="btn-download-desktop glow-btn">
-                <img src="https://stc.utdstc.com/img/mediakit/download-aao-big.png" alt="Download Raazi Music Player" class="block">
-            </a>
-            <a href="https://raazi-music-player.en.uptodown.com/android" title="Download Raazi Music Player" class="btn-download-mobile glow-btn">
-                <img src="https://stc.utdstc.com/img/mediakit/download-aao-small.png" alt="Download Raazi Music Player" class="block">
-            </a>
-            <a href="https://github.com/israrxy/Raazi/releases/download/v4.5.1/Raazi-v4.5.1.apk" class="glow-btn bg-emerald-500 hover:bg-emerald-400 text-black px-8 py-4 rounded-2xl font-bold text-sm sm:text-base flex items-center justify-center gap-2.5 transition-all">
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M6 18c0 .55.45 1 1 1h1v3.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5V19h2v3.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5V19h1c.55 0 1-.45 1-1V8H6v10zM3.5 8C2.67 8 2 8.67 2 9.5v7c0 .83.67 1.5 1.5 1.5S5 17.33 5 16.5v-7C5 8.67 4.33 8 3.5 8zm17 0c-.83 0-1.5.67-1.5 1.5v7c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5v-7c0-.83-.67-1.5-1.5-1.5zm-4.97-5.84l1.3-1.3c.2-.2.2-.51 0-.71-.2-.2-.51-.2-.71 0l-1.48 1.48A5.965 5.965 0 0012 1c-.96 0-1.86.23-2.66.63L7.85.15c-.2-.2-.51-.2-.71 0-.2.2-.2.51 0 .71l1.31 1.31A5.966 5.966 0 006 7h12c0-2.21-1.2-4.15-2.97-5.84zM10 5H9V4h1v1zm5 0h-1V4h1v1z"/></svg>
-                Direct APK v4.5.1
-            </a>
+<!-- ===================== CTA ===================== -->
+<section class="cta-sec" style="padding-top:0">
+    <div class="container">
+        <div class="cta-card rv">
+            <h2>Ready to Listen?</h2>
+            <p>Free, open-source, no ads. Just music — the way it should be.</p>
+            <div class="cta-btns">
+                <a href="https://github.com/israrxy/Raazi/releases/download/v6.0.0/Raazi-v6.0.0.apk" class="btn btn-green">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                    Download APK v6.0.0
+                </a>
+                <a href="https://raazi-music-player.en.uptodown.com/android" class="btn btn-ghost" target="_blank" rel="noopener">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                    Get from Uptodown
+                </a>
+            </div>
+            <p class="cta-ver">v6.0.0 &middot; Android 7.0+ &middot; GPL-3.0 &middot; 21 MB</p>
         </div>
     </div>
 </section>
 
-<!-- Footer -->
-<footer class="py-12 px-4 border-t border-white/5">
-    <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
-        <div class="flex items-center gap-3">
-            <img src="https://github.com/israrxy/Raazi/raw/main/Raazi.png" alt="Raazi" class="w-8 h-8 rounded-lg">
-            <span class="font-black tracking-tight">RAAZI</span>
+</main>
+
+<!-- ===================== FOOTER ===================== -->
+<footer>
+    <div class="container">
+        <div class="foot-grid">
+            <div class="foot-brand">
+                <img src="https://github.com/israrxy/Raazi/raw/main/Raazi.png" alt="Raazi logo">
+                <span><b>RAAZI</b><small>Your music, your way — free forever.</small></span>
+            </div>
+            <div class="foot-col">
+                <b>App</b>
+                <a href="https://github.com/israrxy/Raazi/releases/download/v6.0.0/Raazi-v6.0.0.apk">Download APK</a>
+                <a href="https://raazi-music-player.en.uptodown.com/android" target="_blank" rel="noopener">Uptodown</a>
+                <a href="#whatsnew">What's New</a>
+            </div>
+            <div class="foot-col">
+                <b>Project</b>
+                <a href="https://github.com/israrxy/Raazi" target="_blank" rel="noopener">GitHub</a>
+                <a href="https://github.com/israrxy/Raazi/releases" target="_blank" rel="noopener">Releases</a>
+                <a href="https://github.com/israrxy/Raazi/blob/main/LICENSE" target="_blank" rel="noopener">License (GPL-3.0)</a>
+            </div>
+            <div class="foot-col">
+                <b>Developer</b>
+                <a href="https://israrxy.qzz.io" target="_blank" rel="noopener">israrxy.qzz.io</a>
+                <a href="https://github.com/israrxy" target="_blank" rel="noopener">@israrxy</a>
+            </div>
         </div>
-        <div class="flex flex-wrap justify-center gap-6 text-sm text-zinc-500">
-            <a href="https://github.com/israrxy/Raazi" class="hover:text-emerald-400 transition-colors">GitHub</a>
-            <a href="https://github.com/israrxy/Raazi/releases" class="hover:text-emerald-400 transition-colors">Releases</a>
-            <a href="https://github.com/israrxy/Raazi/blob/main/LICENSE" class="hover:text-emerald-400 transition-colors">License</a>
-            <a href="https://israrxy.qzz.io" class="hover:text-emerald-400 transition-colors">Developer</a>
+        <div class="foot-bottom">
+            <span>&copy; 2026 Raazi &middot; GPL-3.0</span>
+            <span>Made with &hearts; by <a href="https://israrxy.qzz.io" target="_blank" rel="noopener">@israrxy</a></span>
         </div>
-        <p class="text-zinc-700 text-xs font-medium">&copy; 2026 Raazi &middot; <a href="https://israrxy.qzz.io" class="hover:text-emerald-500">@israrxy</a></p>
     </div>
 </footer>
 
+<!-- ===================== MOBILE STICKY INSTALL BAR ===================== -->
+<div class="install-bar" id="installBar" aria-hidden="true">
+    <img src="https://github.com/israrxy/Raazi/raw/main/Raazi.png" alt="">
+    <div class="ib-info"><b>Raazi</b><span>Free &middot; v6.0.0 &middot; 21 MB</span></div>
+    <a href="https://github.com/israrxy/Raazi/releases/download/v6.0.0/Raazi-v6.0.0.apk" class="ib-btn">Install</a>
+</div>
+
+<script>
+    // Reveal on scroll
+    const io = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+            if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+        });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.rv').forEach((el, i) => {
+        el.style.transitionDelay = (i % 3) * 70 + 'ms';
+        io.observe(el);
+    });
+
+    // Nav border on scroll
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 10), { passive: true });
+
+    // Sticky install bar: show after the hero identity block scrolls away (mobile)
+    const bar = document.getElementById('installBar');
+    const hero = document.querySelector('.play-hero');
+    if (hero && 'IntersectionObserver' in window) {
+        new IntersectionObserver(([e]) => {
+            const past = !e.isIntersecting && e.boundingClientRect.top < 0;
+            bar.classList.toggle('show', past);
+            bar.setAttribute('aria-hidden', past ? 'false' : 'true');
+        }, { threshold: 0 }).observe(hero);
+    }
+</script>
 </body>
 </html>
-#hi
