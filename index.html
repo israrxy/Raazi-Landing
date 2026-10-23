@@ -91,15 +91,14 @@
         /* ---------- download row: Uptodown main + APK side icon ---------- */
         .dl-row { display: flex; align-items: center; gap: 12px; }
         .dl-badge {
-            display: inline-flex; border-radius: 12px; overflow: hidden;
-            transition: opacity .25s, transform .25s; flex: none;
+            display: inline-flex; flex: none;
         }
-        .dl-badge:hover { opacity: .85; transform: translateY(-2px); }
-        .dl-badge img { height: 54px; width: auto; }
+        .dl-badge:hover { opacity: .85; }
+        .dl-badge img { width: 172px; height: 61px; }
         .dl-apk {
-            width: 54px; height: 54px; flex: none; border-radius: 13px; display: flex; align-items: center; justify-content: center;
+            width: 61px; height: 61px; flex: none; border-radius: 14px; display: flex; align-items: center; justify-content: center;
             border: 1px solid var(--line); background: var(--panel); color: var(--mut);
-            transition: border-color .25s, color .25s, transform .25s;
+            transition: border-color .25s, color .25s;
         }
         .dl-apk:hover { border-color: var(--line-2); color: var(--g2); transform: translateY(-2px); }
 
@@ -184,14 +183,9 @@
         .shots-scroll::-webkit-scrollbar { display: none; }
         .shot { flex: none; scroll-snap-align: center; height: 460px; border-radius: 22px; overflow: hidden;
             border: 1px solid var(--line);
-            transition: border-color .3s, transform .3s; position: relative; }
+            transition: border-color .3s, transform .3s; }
         .shot img { height: 100%; width: auto; }
-        .shot:hover { border-color: rgba(16,185,129,.4); }
-        .shot figcaption {
-            position: absolute; left: 10px; bottom: 10px; font-size: 10px; font-weight: 700; letter-spacing: .06em;
-            text-transform: uppercase; color: var(--g3); background: rgba(4,8,6,.7); backdrop-filter: blur(8px);
-            border: 1px solid rgba(16,185,129,.22); padding: 4px 9px; border-radius: 999px;
-        }
+        .shot:hover { border-color: rgba(16,185,129,.3); }
 
         /* =================== FEATURES =================== */
         .feat-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
@@ -314,6 +308,8 @@
         /* Reorder sections on mobile: hero → shots → what's new (Play Store flow) */
         @media (max-width: 860px) {
             .nav-links a:not(.nav-dl) { display: none; }
+            .hero .dl-row { justify-content: center; }
+            .ph-note { text-align: center; }
             body { display: flex; flex-direction: column; }
             body > * { width: 100%; }
             .hero { order: 0; }
@@ -427,7 +423,7 @@
 
             <div class="hero-phone rv in">
                 <div class="phone-frame">
-                    <img src="Assets/Screenshots/ss-2.jpg" alt="Raazi player screen">
+                    <img src="Assets/Screenshots/ss-5.jpg" alt="Raazi player screen">
                 </div>
                 <div class="float-card fc-1">
                     <div class="ic">
@@ -457,17 +453,17 @@
             <p>Screenshots straight from the app — swipe through on mobile.</p>
         </div>
         <div class="shots-scroll" id="shots">
-            <figure class="shot"><img src="Assets/Screenshots/ss-1.jpg" alt="Raazi home screen" loading="lazy"><figcaption>Home</figcaption></figure>
-            <figure class="shot"><img src="Assets/Screenshots/ss-2.jpg" alt="Raazi player screen" loading="lazy"><figcaption>Player</figcaption></figure>
-            <figure class="shot"><img src="Assets/Screenshots/ss-3.jpg" alt="Raazi library screen" loading="lazy"><figcaption>Library</figcaption></figure>
-            <figure class="shot"><img src="Assets/Screenshots/ss-4.jpg" alt="Raazi search screen" loading="lazy"><figcaption>Search</figcaption></figure>
-            <figure class="shot"><img src="Assets/Screenshots/ss-5.jpg" alt="Raazi playlist screen" loading="lazy"><figcaption>Playlists</figcaption></figure>
-            <figure class="shot"><img src="Assets/Screenshots/ss-6.jpg" alt="Raazi downloads screen" loading="lazy"><figcaption>Downloads</figcaption></figure>
-            <figure class="shot"><img src="Assets/Screenshots/ss-7.jpg" alt="Raazi settings screen" loading="lazy"><figcaption>Settings</figcaption></figure>
-            <figure class="shot"><img src="Assets/Screenshots/ss-8.jpg" alt="Raazi queue screen" loading="lazy"><figcaption>Queue</figcaption></figure>
-            <figure class="shot"><img src="Assets/Screenshots/ss-9.jpg" alt="Raazi artist screen" loading="lazy"><figcaption>Artist</figcaption></figure>
-            <figure class="shot"><img src="Assets/Screenshots/ss-10.jpg" alt="Raazi screen" loading="lazy"><figcaption>Browse</figcaption></figure>
-            <figure class="shot"><img src="Assets/Screenshots/ss-11.jpg" alt="Raazi screen" loading="lazy"><figcaption>Lyrics</figcaption></figure>
+            <figure class="shot"><img src="Assets/Screenshots/ss-1.jpg" alt="Raazi home feed" loading="lazy"></figure>
+            <figure class="shot"><img src="Assets/Screenshots/ss-5.jpg" alt="Raazi player screen" loading="lazy"></figure>
+            <figure class="shot"><img src="Assets/Screenshots/ss-2.jpg" alt="Raazi lyrics options" loading="lazy"></figure>
+            <figure class="shot"><img src="Assets/Screenshots/ss-3.jpg" alt="Raazi synced lyrics" loading="lazy"></figure>
+            <figure class="shot"><img src="Assets/Screenshots/ss-4.jpg" alt="Raazi home feed" loading="lazy"></figure>
+            <figure class="shot"><img src="Assets/Screenshots/ss-6.jpg" alt="Raazi search playlists" loading="lazy"></figure>
+            <figure class="shot"><img src="Assets/Screenshots/ss-8.jpg" alt="Raazi search music" loading="lazy"></figure>
+            <figure class="shot"><img src="Assets/Screenshots/ss-7.jpg" alt="Raazi search videos" loading="lazy"></figure>
+            <figure class="shot"><img src="Assets/Screenshots/ss-11.jpg" alt="Raazi recent searches" loading="lazy"></figure>
+            <figure class="shot"><img src="Assets/Screenshots/ss-10.jpg" alt="Raazi search suggestions" loading="lazy"></figure>
+            <figure class="shot"><img src="Assets/Screenshots/ss-9.jpg" alt="Raazi search artists" loading="lazy"></figure>
         </div>
     </div>
 </section>
