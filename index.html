@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script>
+        (function() {
+            var params = new URLSearchParams(window.location.search);
+            if (params.has('video') || params.has('id') || params.has('v') || params.has('list') || params.has('channelId')) {
+                window.location.replace('/play.html' + window.location.search);
+            }
+        })();
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="google-site-verification" content="sry79unL3BBhXd1Rd1Em4XG-eJE_vH5t_4sYpKZ_q1k">
