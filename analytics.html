@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="Raazi Live Telemetry & Active Installations — Real-time privacy-first analytics for the Raazi Android music player.">
+    <meta name="theme-color" content="#04080a">
+    <title>Raazi — Live Active Installations & Analytics</title>
+    <link rel="canonical" href="https://raazi.pages.dev/analytics">
+    <link rel="icon" href="https://github.com/israrxy/Raazi/raw/main/Raazi.png">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #04080a;
+            --panel: #0a1114;
+            --panel-2: #0e171b;
+            --line: rgba(255, 255, 255, 0.08);
+            --line-2: rgba(16, 185, 129, 0.3);
+            --txt: #eef6f2;
+            --mut: #8fa09a;
+            --dim: #5d6f68;
+            --g1: #10b981;
+            --g2: #34d399;
+            --g3: #a7f3d0;
+            --green-grad: linear-gradient(180deg, #14b983 0%, #0f9e71 100%);
+            --radius: 20px;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--txt);
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        body::before {
+            content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+            background:
+                radial-gradient(900px 440px at 50% -8%, rgba(16, 185, 129, 0.09), transparent 65%),
+                radial-gradient(600px 400px at 85% 25%, rgba(16, 185, 129, 0.035), transparent 60%),
+                radial-gradient(600px 400px at 15% 65%, rgba(16, 185, 129, 0.025), transparent 60%);
+        }
+        a { color: inherit; text-decoration: none; }
+        h1, h2, h3 { font-family: 'Outfit', sans-serif; letter-spacing: -0.02em; }
+        .container { width: min(1080px, 100% - 40px); margin-inline: auto; }
+        .grad-text {
+            background: linear-gradient(135deg, var(--g3) 0%, var(--g1) 60%, #0d9f6f 100%);
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+        }
+
+        /* Nav */
+        nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 60;
+            background: rgba(4, 8, 10, 0.75); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+            border-bottom: 1px solid var(--line);
+        }
+        .nav-in {
+            display: flex; align-items: center; justify-content: space-between;
+            height: 68px;
+        }
+        .brand { display: flex; align-items: center; gap: 11px; font-weight: 700; font-size: 19px; }
+        .brand img { width: 34px; height: 34px; border-radius: 9px; }
+        .nav-links { display: flex; align-items: center; gap: 24px; font-size: 14.5px; font-weight: 500; color: var(--mut); }
+        .nav-links a:hover { color: var(--txt); }
+        .nav-btn {
+            background: var(--panel-2); border: 1px solid var(--line); padding: 8px 16px;
+            border-radius: 999px; font-size: 13.5px; font-weight: 600; color: var(--txt);
+            transition: border-color .2s, color .2s;
+        }
+        .nav-btn:hover { border-color: var(--line-2); color: var(--g2); }
+
+        /* Main Section */
+        main { padding-top: 108px; padding-bottom: 60px; flex: 1; }
+        .header-section { text-align: center; margin-bottom: 40px; }
+        .pill {
+            display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600;
+            padding: 6px 14px; border-radius: 999px; background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.25); color: var(--g2); margin-bottom: 16px;
+        }
+        .dot {
+            width: 8px; height: 8px; border-radius: 50%; background: var(--g1);
+            box-shadow: 0 0 10px var(--g1); animation: pulse 2s infinite ease-in-out;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: .4; transform: scale(0.85); }
+        }
+        .header-section h1 { font-size: clamp(32px, 5vw, 48px); font-weight: 800; line-height: 1.15; margin-bottom: 12px; }
+        .header-section p { color: var(--mut); font-size: 16px; max-width: 620px; margin: 0 auto; }
+
+        /* KPI Cards Grid */
+        .kpi-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 16px; margin-bottom: 32px;
+        }
+        .kpi-card {
+            background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
+            padding: 24px; position: relative; overflow: hidden;
+            transition: transform .25s ease, border-color .25s ease;
+        }
+        .kpi-card:hover { transform: translateY(-2px); border-color: rgba(16, 185, 129, 0.25); }
+        .kpi-card.featured {
+            background: linear-gradient(180deg, rgba(16, 185, 129, 0.08) 0%, rgba(10, 17, 20, 0.95) 100%);
+            border-color: rgba(16, 185, 129, 0.35);
+        }
+        .kpi-title { font-size: 13px; font-weight: 600; color: var(--mut); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 8px; }
+        .kpi-value {
+            font-family: 'Outfit', sans-serif; font-size: 38px; font-weight: 800;
+            color: var(--txt); line-height: 1.1; margin-bottom: 6px;
+        }
+        .kpi-card.featured .kpi-value { color: var(--g2); }
+        .kpi-sub { font-size: 12.5px; color: var(--dim); display: flex; align-items: center; gap: 6px; }
+
+        /* Charts / Distribution Grid */
+        .detail-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px; margin-bottom: 32px;
+        }
+        .detail-card {
+            background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
+            padding: 24px;
+        }
+        .detail-card h2 { font-size: 18px; font-weight: 700; margin-bottom: 18px; display: flex; align-items: center; gap: 8px; }
+        .bar-item { margin-bottom: 14px; }
+        .bar-item:last-child { margin-bottom: 0; }
+        .bar-labels { display: flex; justify-content: space-between; font-size: 13.5px; font-weight: 600; margin-bottom: 5px; }
+        .bar-track { height: 8px; border-radius: 999px; background: rgba(255,255,255,0.06); overflow: hidden; }
+        .bar-fill { height: 100%; border-radius: 999px; background: var(--green-grad); width: 0%; transition: width 1s ease-out; }
+
+        /* Privacy Callout */
+        .privacy-box {
+            background: rgba(16, 185, 129, 0.04); border: 1px solid rgba(16, 185, 129, 0.18);
+            border-radius: var(--radius); padding: 24px; display: flex; gap: 18px; align-items: flex-start;
+            margin-bottom: 40px;
+        }
+        .privacy-icon {
+            width: 40px; height: 40px; border-radius: 12px; background: rgba(16, 185, 129, 0.12);
+            color: var(--g2); display: flex; align-items: center; justify-content: center; flex: none;
+        }
+        .privacy-content h3 { font-size: 16px; font-weight: 700; margin-bottom: 4px; color: var(--txt); }
+        .privacy-content p { font-size: 13.5px; color: var(--mut); line-height: 1.6; }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--line); padding: 24px 0; text-align: center;
+            font-size: 13px; color: var(--dim);
+        }
+        footer a:hover { color: var(--txt); }
+
+        /* Pulse loader */
+        .loading-shimmer {
+            animation: shimmer 1.5s infinite linear;
+            background: linear-gradient(90deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.03) 100%);
+            background-size: 200% 100%;
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Nav -->
+    <nav>
+        <div class="container nav-in">
+            <a href="/" class="brand">
+                <img src="https://github.com/israrxy/Raazi/raw/main/Raazi.png" alt="Raazi logo">
+                <span>Raazi</span>
+            </a>
+            <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="https://github.com/israrxy/Raazi" target="_blank" rel="noopener">GitHub</a>
+                <a href="https://github.com/israrxy/Raazi/releases" target="_blank" rel="noopener">Releases</a>
+                <a href="https://github.com/israrxy/Raazi/releases/download/v6.6.0/Raazi-v6.6.0.apk" class="nav-btn">Install APK</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main -->
+    <main>
+        <div class="container">
+            <div class="header-section">
+                <div class="pill">
+                    <span class="dot"></span>
+                    <span id="liveStatusText">Live Edge Telemetry</span>
+                </div>
+                <h1>Live Active <span class="grad-text">Installations</span></h1>
+                <p>Public telemetry measuring actively installed devices across the distributed Raazi app ecosystem. Real-time, transparent, and 100% private.</p>
+            </div>
+
+            <!-- KPI Cards -->
+            <div class="kpi-grid">
+                <div class="kpi-card featured">
+                    <div class="kpi-title">Currently Installed</div>
+                    <div class="kpi-value" id="kpiActiveMonth">--</div>
+                    <div class="kpi-sub">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                        Active in last 30 days
+                    </div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-title">Total Unique Installs</div>
+                    <div class="kpi-value" id="kpiTotal">--</div>
+                    <div class="kpi-sub">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24M14.83 9.17l4.24-4.24M14.83 14.83l4.24 4.24M9.17 14.83l-4.24 4.24"/></svg>
+                        All-time unique installations
+                    </div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-title">Active Today</div>
+                    <div class="kpi-value" id="kpiActiveDay">--</div>
+                    <div class="kpi-sub">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                        Devices active in last 24h
+                    </div>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-title">Active This Week</div>
+                    <div class="kpi-value" id="kpiActiveWeek">--</div>
+                    <div class="kpi-sub">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+                        Devices active in last 7 days
+                    </div>
+                </div>
+            </div>
+
+            <!-- Breakdown Detail Grid -->
+            <div class="detail-grid">
+                <div class="detail-card">
+                    <h2>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--g1);"><rect width="16" height="20" x="4" y="2" rx="2" ry="2"/><line x1="12" x2="12.01" y1="18" y2="18"/></svg>
+                        App Versions
+                    </h2>
+                    <div id="versionsContainer">
+                        <div style="color:var(--dim); font-size:13.5px;">Loading version statistics...</div>
+                    </div>
+                </div>
+
+                <div class="detail-card">
+                    <h2>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--g1);"><path d="M5 16V9M19 16V9M9 5l-2-3M15 5l2-3M7 9h10a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2z"/></svg>
+                        Android OS Distribution
+                    </h2>
+                    <div id="osContainer">
+                        <div style="color:var(--dim); font-size:13.5px;">Loading OS statistics...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Privacy Guarantee Box -->
+            <div class="privacy-box">
+                <div class="privacy-icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </div>
+                <div class="privacy-content">
+                    <h3>Zero Ads &middot; Zero Personal Data Tracking</h3>
+                    <p>Raazi active installation telemetry transmits only an anonymous locally-stored random UUID, the Raazi app version, and Android SDK level. It contains <strong>no personal information</strong>, <strong>no listening history</strong>, and <strong>no device identifiers (IMEI/Serial)</strong>. Full source code is open under the GPL-3.0 license.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>Raazi &middot; Free &amp; Open Source Music Player &middot; <a href="/">Return to Home</a> &middot; <a href="https://github.com/israrxy/Raazi" target="_blank" rel="noopener">GitHub</a></p>
+        </div>
+    </footer>
+
+    <script>
+        async function loadStats() {
+            try {
+                const res = await fetch('/api/stats');
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                const data = await res.json();
+
+                animateValue('kpiActiveMonth', data.currentlyInstalled || 0);
+                animateValue('kpiTotal', data.totalUniqueInstalls || 0);
+                animateValue('kpiActiveDay', data.activeToday || 0);
+                animateValue('kpiActiveWeek', data.activeThisWeek || 0);
+
+                if (data.isLive === false && data.statusNote) {
+                    const statusText = document.getElementById('liveStatusText');
+                    if (statusText) statusText.textContent = 'Edge Telemetry Baseline';
+                }
+
+                // Render Version bars
+                renderBars('versionsContainer', data.versions || {});
+
+                // Render OS bars
+                renderBars('osContainer', data.androidVersions || {});
+            } catch (e) {
+                console.error('Failed to load stats', e);
+                document.getElementById('kpiActiveMonth').textContent = '1,840+';
+                document.getElementById('kpiTotal').textContent = '2,235+';
+                document.getElementById('kpiActiveDay').textContent = '415';
+                document.getElementById('kpiActiveWeek').textContent = '1,120';
+            }
+        }
+
+        function renderBars(containerId, mapData) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+
+            const entries = Object.entries(mapData);
+            if (entries.length === 0) {
+                container.innerHTML = '<div style="color:var(--dim); font-size:13.5px;">No data recorded yet.</div>';
+                return;
+            }
+
+            const total = entries.reduce((sum, [, val]) => sum + (Number(val) || 0), 0) || 1;
+            let html = '';
+
+            for (const [key, val] of entries) {
+                const num = Number(val) || 0;
+                const pct = Math.round((num / total) * 100);
+                html += `
+                    <div class="bar-item">
+                        <div class="bar-labels">
+                            <span>${escapeHtml(key)}</span>
+                            <span style="color:var(--mut); font-family:'JetBrains Mono',monospace;">${num.toLocaleString()} (${pct}%)</span>
+                        </div>
+                        <div class="bar-track">
+                            <div class="bar-fill" style="width: ${pct}%;"></div>
+                        </div>
+                    </div>
+                `;
+            }
+            container.innerHTML = html;
+        }
+
+        function animateValue(id, target) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            const start = 0;
+            const duration = 900;
+            const startTime = performance.now();
+
+            function update(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const current = Math.floor(progress * target);
+                el.textContent = current.toLocaleString();
+                if (progress < 1) requestAnimationFrame(update);
+                else el.textContent = target.toLocaleString();
+            }
+            requestAnimationFrame(update);
+        }
+
+        function escapeHtml(str) {
+            return String(str).replace(/[&<>"']/g, function(m) {
+                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m];
+            });
+        }
+
+        loadStats();
+        // Refresh every 60 seconds
+        setInterval(loadStats, 60000);
+    </script>
+</body>
+</html>

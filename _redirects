@@ -1,4 +1,5 @@
 # Cloudflare Pages Deep-Link Routing for raazi.pages.dev
+/analytics    /analytics.html   200
 /play       /play.html   200
 /play/*     /play.html   200
 /watch      /play.html   200
