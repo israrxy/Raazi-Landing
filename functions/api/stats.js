@@ -32,6 +32,7 @@ export async function onRequestGet(context) {
           activeThisWeek: 1120,
           activeToday: 415,
           versions: {
+            "v6.6.5": 14,
             "v6.6.0": 29,
             "v6.0.0": 249,
             "v4.5.1": 1662,
@@ -123,7 +124,7 @@ export async function onRequestGet(context) {
       currentlyInstalled: Math.max(currentlyInstalled, 1),
       activeThisWeek: Math.max(activeThisWeek, 1),
       activeToday: Math.max(activeToday, 1),
-      versions: Object.keys(versionMap).length > 0 ? versionMap : { "v6.6.0": currentlyInstalled },
+      versions: Object.keys(versionMap).length > 0 ? versionMap : { "v6.6.5": currentlyInstalled },
       androidVersions: Object.keys(osMap).length > 0 ? osMap : { "Android 14": 60, "Android 13": 40 },
       updatedAt: now,
     };
