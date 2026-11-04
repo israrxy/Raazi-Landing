@@ -34,6 +34,7 @@ export async function onRequestGet(context) {
     let cosmosTest = null;
     let collsTest = null;
     let docTest = null;
+    let upsertTest = null;
     try {
       const dateStr = new Date().toUTCString();
       const auth = await generateCosmosAuth("GET", "dbs", "", dateStr, masterKey);
@@ -68,7 +69,6 @@ export async function onRequestGet(context) {
       }
 
       // Test upsert doc
-      let upsertTest = null;
       try {
         const u = await upsertCosmosDoc(endpoint, masterKey, { id: "test_id", email: "test@example.com", updatedAt: Date.now() });
         upsertTest = { ok: true, id: u.id };
