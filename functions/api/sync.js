@@ -66,6 +66,15 @@ export async function onRequestGet(context) {
       } catch (de) {
         docTest = { ok: false, error: de.message };
       }
+
+      // Test upsert doc
+      let upsertTest = null;
+      try {
+        const u = await upsertCosmosDoc(endpoint, masterKey, { id: "test_id", email: "test@example.com", updatedAt: Date.now() });
+        upsertTest = { ok: true, id: u.id };
+      } catch (ue) {
+        upsertTest = { ok: false, error: ue.message };
+      }
     } catch (e) {
       cosmosTest = { error: e.message };
     }
@@ -77,6 +86,7 @@ export async function onRequestGet(context) {
       cosmosTest,
       collsTest,
       docTest,
+      upsertTest,
     });
   }
   return handleSync(context, "GET");
