@@ -20,6 +20,41 @@ export async function onRequestOptions() {
 }
 
 export async function onRequestGet(context) {
+  const url = new URL(context.request.url);
+  if (url.searchParams.get("diag") === "1") {
+    const connStr = context.env.COSMOS_CONNECTION_STRING;
+    if (!connStr) {
+      return jsonResponse({
+        diag: true,
+        hasCosmosEnv: false,
+        envKeys: Object.keys(context.env || {})
+      });
+    }
+    const { endpoint, masterKey } = parseCosmosConnectionString(connStr);
+    let cosmosTest = null;
+    try {
+      const dateStr = new Date().toUTCString();
+      const auth = await generateCosmosAuth("GET", "dbs", "", dateStr, masterKey);
+      const res = await fetch(`${endpoint}/dbs`, {
+        headers: {
+          "x-ms-date": dateStr,
+          "x-ms-version": "2018-12-31",
+          "Authorization": auth,
+        },
+      });
+      const text = await res.text();
+      cosmosTest = { status: res.status, ok: res.ok, body: text };
+    } catch (e) {
+      cosmosTest = { error: e.message };
+    }
+    return jsonResponse({
+      diag: true,
+      hasCosmosEnv: true,
+      endpoint,
+      masterKeyPresent: Boolean(masterKey),
+      cosmosTest,
+    });
+  }
   return handleSync(context, "GET");
 }
 
