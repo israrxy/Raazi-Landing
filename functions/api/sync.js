@@ -32,6 +32,8 @@ export async function onRequestGet(context) {
     }
     const { endpoint, masterKey } = parseCosmosConnectionString(connStr);
     let cosmosTest = null;
+    let collsTest = null;
+    let docTest = null;
     try {
       const dateStr = new Date().toUTCString();
       const auth = await generateCosmosAuth("GET", "dbs", "", dateStr, masterKey);
@@ -44,6 +46,26 @@ export async function onRequestGet(context) {
       });
       const text = await res.text();
       cosmosTest = { status: res.status, ok: res.ok, body: text };
+
+      // Test collection listing
+      const collAuth = await generateCosmosAuth("GET", "colls", `dbs/${DB_ID}`, dateStr, masterKey);
+      const collRes = await fetch(`${endpoint}/dbs/${DB_ID}/colls`, {
+        headers: {
+          "x-ms-date": dateStr,
+          "x-ms-version": "2018-12-31",
+          "Authorization": collAuth,
+        },
+      });
+      const collText = await collRes.text();
+      collsTest = { status: collRes.status, ok: collRes.ok, body: collText };
+
+      // Test get doc
+      try {
+        const d = await getCosmosDoc(endpoint, masterKey, "test_id");
+        docTest = { ok: true, result: d };
+      } catch (de) {
+        docTest = { ok: false, error: de.message };
+      }
     } catch (e) {
       cosmosTest = { error: e.message };
     }
@@ -53,6 +75,8 @@ export async function onRequestGet(context) {
       endpoint,
       masterKeyPresent: Boolean(masterKey),
       cosmosTest,
+      collsTest,
+      docTest,
     });
   }
   return handleSync(context, "GET");
