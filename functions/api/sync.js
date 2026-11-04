@@ -21,97 +21,8 @@ export async function onRequestOptions() {
 
 export async function onRequestGet(context) {
   const url = new URL(context.request.url);
-  if (url.searchParams.get("diag") === "1") {
-    const connStr = context.env.COSMOS_CONNECTION_STRING;
-    if (!connStr) {
-      return jsonResponse({
-        diag: true,
-        hasCosmosEnv: false,
-        envKeys: Object.keys(context.env || {})
-      });
-    }
-    const { endpoint, masterKey } = parseCosmosConnectionString(connStr);
-    let cosmosTest = null;
-    let collsTest = null;
-    let docTest = null;
-    let upsertTest = null;
-    try {
-      const dateStr = new Date().toUTCString();
-      const auth = await generateCosmosAuth("GET", "dbs", "", dateStr, masterKey);
-      const res = await fetch(`${endpoint}/dbs`, {
-        headers: {
-          "x-ms-date": dateStr,
-          "x-ms-version": "2018-12-31",
-          "Authorization": auth,
-        },
-      });
-      const text = await res.text();
-      cosmosTest = { status: res.status, ok: res.ok, body: text };
-
-      // Test collection listing
-      const collAuth = await generateCosmosAuth("GET", "colls", `dbs/${DB_ID}`, dateStr, masterKey);
-      const collRes = await fetch(`${endpoint}/dbs/${DB_ID}/colls`, {
-        headers: {
-          "x-ms-date": dateStr,
-          "x-ms-version": "2018-12-31",
-          "Authorization": collAuth,
-        },
-      });
-      const collText = await collRes.text();
-      collsTest = { status: collRes.status, ok: collRes.ok, body: collText };
-
-      // Test get doc
-      try {
-        const d = await getCosmosDoc(endpoint, masterKey, "test_id");
-        docTest = { ok: true, result: d };
-      } catch (de) {
-        docTest = { ok: false, error: de.message };
-      }
-
-      // Test upsert variations
-      const trials = {};
-      const variations = [
-        { name: "normal", headers: { "x-ms-documentdb-is-upsert": "true", "x-ms-documentdb-partitionkey": JSON.stringify(["test_id"]) } },
-        { name: "capital_True", headers: { "x-ms-documentdb-is-upsert": "True", "x-ms-documentdb-partitionkey": JSON.stringify(["test_id"]) } },
-        { name: "no_partitionkey_header", headers: { "x-ms-documentdb-is-upsert": "True" } },
-        { name: "plain_insert_no_upsert", headers: { "x-ms-documentdb-partitionkey": JSON.stringify(["test_id"]) } },
-        { name: "plain_insert_no_headers", headers: {} },
-      ];
-      for (const v of variations) {
-        try {
-          const uDate = new Date().toUTCString();
-          const uAuth = await generateCosmosAuth("POST", "docs", `dbs/${DB_ID}/colls/${COLL_ID}`, uDate, masterKey);
-          const uRes = await fetch(`${endpoint}/dbs/${DB_ID}/colls/${COLL_ID}/docs`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "x-ms-date": uDate,
-              "x-ms-version": "2018-12-31",
-              "Authorization": uAuth,
-              ...v.headers,
-            },
-            body: JSON.stringify({ id: "test_id", email: "test@example.com" }),
-          });
-          const uText = await uRes.text();
-          trials[v.name] = { status: uRes.status, ok: uRes.ok, body: uText.substring(0, 150) };
-        } catch (err) {
-          trials[v.name] = { error: err.message };
-        }
-      }
-      upsertTest = trials;
-    } catch (e) {
-      cosmosTest = { error: e.message };
-    }
-    return jsonResponse({
-      diag: true,
-      hasCosmosEnv: true,
-      endpoint,
-      masterKeyPresent: Boolean(masterKey),
-      cosmosTest,
-      collsTest,
-      docTest,
-      upsertTest,
-    });
+  if (url.searchParams.get("ping") === "1") {
+    return jsonResponse({ status: "ok", service: "Raazi Cloud Sync", db: DB_ID });
   }
   return handleSync(context, "GET");
 }
@@ -301,10 +212,11 @@ async function upsertCosmosDoc(endpoint, masterKey, doc) {
       "Content-Type": "application/json",
       "x-ms-date": dateStr,
       "x-ms-version": "2018-12-31",
-      "x-ms-documentdb-is-upsert": "true",
+      "x-ms-documentdb-is-upsert": "True",
       "x-ms-documentdb-partitionkey": JSON.stringify([doc.id]),
       "Authorization": auth,
     },
+    body: JSON.stringify(doc),
   });
 
   if (!res.ok) {
