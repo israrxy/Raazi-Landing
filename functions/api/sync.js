@@ -68,13 +68,37 @@ export async function onRequestGet(context) {
         docTest = { ok: false, error: de.message };
       }
 
-      // Test upsert doc
-      try {
-        const u = await upsertCosmosDoc(endpoint, masterKey, { id: "test_id", email: "test@example.com", updatedAt: Date.now() });
-        upsertTest = { ok: true, id: u.id };
-      } catch (ue) {
-        upsertTest = { ok: false, error: ue.message };
+      // Test upsert variations
+      const trials = {};
+      const variations = [
+        { name: "normal", headers: { "x-ms-documentdb-is-upsert": "true", "x-ms-documentdb-partitionkey": JSON.stringify(["test_id"]) } },
+        { name: "capital_True", headers: { "x-ms-documentdb-is-upsert": "True", "x-ms-documentdb-partitionkey": JSON.stringify(["test_id"]) } },
+        { name: "no_partitionkey_header", headers: { "x-ms-documentdb-is-upsert": "True" } },
+        { name: "plain_insert_no_upsert", headers: { "x-ms-documentdb-partitionkey": JSON.stringify(["test_id"]) } },
+        { name: "plain_insert_no_headers", headers: {} },
+      ];
+      for (const v of variations) {
+        try {
+          const uDate = new Date().toUTCString();
+          const uAuth = await generateCosmosAuth("POST", "docs", `dbs/${DB_ID}/colls/${COLL_ID}`, uDate, masterKey);
+          const uRes = await fetch(`${endpoint}/dbs/${DB_ID}/colls/${COLL_ID}/docs`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "x-ms-date": uDate,
+              "x-ms-version": "2018-12-31",
+              "Authorization": uAuth,
+              ...v.headers,
+            },
+            body: JSON.stringify({ id: "test_id", email: "test@example.com" }),
+          });
+          const uText = await uRes.text();
+          trials[v.name] = { status: uRes.status, ok: uRes.ok, body: uText.substring(0, 150) };
+        } catch (err) {
+          trials[v.name] = { error: err.message };
+        }
       }
+      upsertTest = trials;
     } catch (e) {
       cosmosTest = { error: e.message };
     }
